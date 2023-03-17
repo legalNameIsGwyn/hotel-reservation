@@ -29,10 +29,10 @@ body > * {
 
 /* default section behaviour */
 .section-box{
-    min-width: 150px;
-    max-width: 400px;
+    min-width: 90px;
+    max-width: 350px;
     min-height: auto;
-    margin-top: 30px;
+    margin-bottom: 30px;
     padding: 15px;
     border-radius: 3px;
     background-color: var(--color4);
@@ -48,24 +48,27 @@ body > * {
     padding: 10px 30px;
 }
 
-.input-group.divided {
+.divided {
+    display: flex;
     flex-direction: row;
-    background-color: orange;
-    outline: solid black;
+    justify-content: center;
 }
-
-.input-group.divided .divider  {
-    background-color: red;
+  
+.divider {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    justify-content: space-between;
 }
-.input-group.divided .divider input,
-.input-group.divided .divider .dropdown  {
-    background-color: green;
-    flex: 1;
-    width: 94%;
+  /* Add left margin to .divider elements that come after another .divider element */
+.divider + .divider {
+    margin-left: 20px; 
 }
-
-
+  
+.divider #birthday,
+.divider select {
+    height: 32px;
+}
 
 .textbox {
     margin-top: 5px;
