@@ -6,24 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easytel</title>
     <link rel="stylesheet" href="styles/style.css">
-    <script src="scripts/qrcode.min.js"></script>
     <script src="scripts/script.js"></script>
 </head>
 <body>
     <h1>Easytel Registration</h1>
 
-    <form id="register-form" method="POST" action="php/index.php" autocomplete="off">
+    <form id="register-form" method="POST" action="./php/index.php" autocomplete="off">
 
         <div class="section-box">
             <div class="input-group divided">
                 <div class="divider">
                     <label for="first-name">First Name:</label>
-                    <input class="textbox" id="first-name" type="text" required>
+                    <input class="textbox" id="first-name" type="text" name="first-name" required>
                 </div>
         
                 <div class="divider">
                     <label for="last-name">Last Name:</label>
-                    <input class="textbox" id="last-name" type="text" required>
+                    <input class="textbox" id="last-name" type="text" name="last-name" required>
                 </div>
         
             </div>
@@ -32,14 +31,14 @@
                 <div class="divider">
                     <label for="sex">Sex:</label>
                     <select class="textbox dropdown" name="sex" id="sex" required>
-                        <option value="0">Male</option>
-                        <option value="1">Female</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
                     </select>
                 </div>
     
                 <div class="divider">
                     <label for="age">Age:</label>
-                    <input class="textbox" id="age" type="number" required>
+                    <input class="textbox" id="age" type="number" name="age" required>
                 </div>
 
                 <div class="divider">
@@ -51,18 +50,18 @@
             
             <div class="input-group">
                 <label for="contact-number">Contact Number:</label>
-                <input class="textbox" id="contact-number" type="text" required>
+                <input class="textbox" id="contact-number" type="text" name="contact-number" required>
             </div>
     
 
             <div class="input-group">
                 <label for="email">Email:</label>
-                <input class="textbox" id="email" type="text" required>
+                <input class="textbox" id="email" type="text" name="email" required>
             </div>
     
             <div class="input-group ">
                 <label for="address">Full Address:</label>
-                <input class="textbox" id="address" type="text" required>
+                <input class="textbox" id="address" type="text" name="address" required>
             </div>
         </div>
 
@@ -70,12 +69,12 @@
 
             <div class="input-group">
                 <label for="username">Username:</label>
-                <input class="textbox" id="username" type="text" required>
+                <input class="textbox" id="username" type="text" name="username" required>
             </div>
 
             <div class="input-group">
                 <label for="password">Password:</label>
-                <input class="textbox" id="password" type="password" required>
+                <input class="textbox" id="password" type="password" name="password" required>
             </div>
 
         </div>
@@ -83,7 +82,7 @@
 
     
     <input value="Register" class="submit" id="register-button" name="Next" type="Submit" form="register-form">
-    <p>Already have an account? <a href="login.html">Login</a></p>
+    <br><p>Already have an account? <a href="login.html">Login</a></p>
 
 </body>
 </html>

@@ -9,7 +9,8 @@ $conn = mysqli_connect($host, $dbuser, "", $database);
 
 // Check the connection
 if ($conn->connect_errno) {
-    echo ("Oops, there's a connection error: " . mysqli_connect_error());
+    echo '<script>console.log("error here");</script>';
+
 }
 
 if (!$conn) {
