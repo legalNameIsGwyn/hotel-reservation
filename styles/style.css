@@ -1,0 +1,108 @@
+
+:root {
+    --color1: rgb(0, 74, 148);
+    --color2:rgb(245, 110, 148);
+    --color3: rgb(244, 231, 12); /* background */
+    --color4: rgb(3, 209, 235);
+    --color5: rgb(251, 235, 235);
+}
+
+@font-face {
+    font-family: Manrope;
+    src: url(Manrope-VariableFont_wght.ttf);
+}
+
+body{
+    background-color: var(--color3);
+    font-family: Manrope;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 5px;
+}
+
+body > * {
+    margin: 10px;
+}
+
+
+/* default section behaviour */
+.section-box{
+    min-width: 150px;
+    max-width: 400px;
+    min-height: auto;
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 3px;
+    background-color: var(--color4);
+    box-shadow: 8px 10px var(--color2); /* adds shadow */
+}
+
+
+/* start of section-box */
+.input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 30px;
+}
+
+.input-group.divided {
+    flex-direction: row;
+    background-color: orange;
+    outline: solid black;
+}
+
+.input-group.divided .divider  {
+    background-color: red;
+    flex: 1;
+}
+.input-group.divided .divider input,
+.input-group.divided .divider .dropdown  {
+    background-color: green;
+    flex: 1;
+    width: 94%;
+}
+
+
+
+.textbox {
+    margin-top: 5px;
+    border: none;
+    height: 30px;
+    width: 100%;
+}
+/* end of section-box */
+
+/* start of buttons */
+
+.submit, .back, button, input[type=submit]{
+    border-radius: 3px;
+    font-size: 20px;
+    border: none;
+    width: 130px;
+    height: 50px;
+}
+
+.submit, input[type=submit]{
+    background-color: var(--color4);
+    box-shadow: 8px 10px var(--color2);
+}
+
+.submit:hover, input[type=submit]:hover{
+    background-color: var(--color2);
+    box-shadow: 5px 10px var(--color4);
+}
+
+.back, button {
+    background-color: var(--color2);
+    box-shadow: 5px 10px var(--color4);
+}
+
+.back:hover, button:hover  {
+    background-color: var(--color4);
+    box-shadow: 5px 10px color2;
+}
+
+/* end of submit button */
