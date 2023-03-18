@@ -27,37 +27,48 @@ app.get("/", (req, res) => {
     res.render("index")
 })
 
-// ================= GET ==================
+// ================= LOGIN ==================
 
-app.get("/login", (req, res) => {
-    console.log("User entered login.")
-    res.render("login")
-})
+app
+    .route("/login")
+    .get((req, res) => {
+        console.log("User entered login.")
+        res.render("login")
+    })  
+    .post(async (req, res) => {
+        console.log("Loggin in.")
+        try{
 
-app.get("/register", (req, res) => {
-    console.log("User entered register.")
-    res.render("register");
-})
+        } catch {
+            console.log("Error in login.")
 
-// ================ POST ==================
+            res.render('login')
+        }
+    })
 
-app.post("/login", (req, res) => {
-    console.log("check if user exists")
-    res.render("index")
-})
+// ================ REGISTER ==================
 
-app.post("/register", async (req, res) => {
-    console.log("Registering")
-    const user = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.birthday, req.body.contact_number, req.body.email, req.body.address, 1]
+app
+    .route("/register")
+    .get((req, res) => {
+        console.log("User entered register.")
+        res.render("register");
+    })
+    .post(async (req, res) => {
+        console.log("Registering")
+        const user = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.birthday, req.body.contact_number, req.body.email, req.body.address, 1]
 
-    console.log(user)
+        console.log(user)
 
-    if(!await userExists(user[0])){
-        addUser(user)
-        console.log(`${user[0]} successfully registerd!\n`)
-    }
-    res.redirect('/login')
-})
+        if(!await userExists(user[0])){
+            addUser(user)
+            console.log(`${user[0]} successfully registerd!\n`)
+        } else {
+            res.render('register', { message: "Username is already take",
+            user: user})
+        }
+        res.redirect('/login')
+    })
 
 app.listen(2077);
 console.log("Listening to port " + port + ".");

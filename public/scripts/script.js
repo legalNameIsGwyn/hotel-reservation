@@ -1,5 +1,11 @@
 var qrcode;
 
+const urlParams = new URLSearchParams(window.location.search);
+const message = ulrParams.get('message');
+
+if (message) {
+    alert(message);
+}
 // check if document has loaded
 document.addEventListener("DOMContentLoaded", function(){
     qrcode = new QRCode(document.getElementById("qrcode"));
