@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easytel Login</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>Easytel Login</h1>
+
+    <form action="/login" id="login-form" method="POST" autocomplete="" class="section-box">
+
+        <div class="input-group">
+            <label for="username">User Name:</label>
+            <input type="text" id="username" name="username" required class="textbox">
+        </div>
+
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required class="textbox">
+        </div>
+
+    </form>
+    <input type="submit" form="login-form" name="login" value="Login">
+    
+    <br><p>No account yet? <a href="/register">Register</a></p>
+
+</body>
+</html>

@@ -5,24 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easytel</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="/styles/style.css">
     <script src="scripts/script.js"></script>
 </head>
 <body>
     <h1>Easytel Registration</h1>
 
-    <form id="register-form" method="POST" action="./php/index.php" autocomplete="off">
+    <form id="register_form" method="POST" action="/register" name="register_form" autocomplete="off">
 
         <div class="section-box">
             <div class="input-group divided">
                 <div class="divider">
-                    <label for="first-name">First Name:</label>
-                    <input class="textbox" id="first-name" type="text" name="first-name" required>
+                    <label for="first_name">First Name:</label>
+                    <input class="textbox" id="first_name" type="text" name="first_name" value="<%= locals.first_name%>"  >
                 </div>
         
                 <div class="divider">
-                    <label for="last-name">Last Name:</label>
-                    <input class="textbox" id="last-name" type="text" name="last-name" required>
+                    <label for="last_name">Last Name:</label>
+                    <input class="textbox" id="last_name" type="text" name="last_name" value="<%= locals.last_name%>" >
                 </div>
         
             </div>
@@ -30,7 +30,7 @@
             <div class="input-group divided">
                 <div class="divider">
                     <label for="sex">Sex:</label>
-                    <select class="textbox dropdown" name="sex" id="sex" required>
+                    <select class="textbox dropdown" name="sex" id="sex" >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
@@ -38,30 +38,30 @@
     
                 <div class="divider">
                     <label for="age">Age:</label>
-                    <input class="textbox" id="age" type="number" name="age" required>
+                    <input class="textbox" id="age" type="number" name="age" value="<%= locals.age%>" >
                 </div>
 
                 <div class="divider">
                     <label for="birthday">Birthday:</label>
-                    <input class="textbox" type="date" id="birthday" name="birthday" required>
+                    <input class="textbox" type="date" id="birthday" name="birthday" value="<%= locals.birthday %>" >
                 </div>
     
             </div>
             
             <div class="input-group">
-                <label for="contact-number">Contact Number:</label>
-                <input class="textbox" id="contact-number" type="text" name="contact-number" required>
+                <label for="contact_number">Contact Number:</label>
+                <input class="textbox" id="contact_number" type="text" name="contact_number" value="<%= locals.contact_number%>" >
             </div>
     
 
             <div class="input-group">
                 <label for="email">Email:</label>
-                <input class="textbox" id="email" type="text" name="email" required>
+                <input class="textbox" id="email" type="text" name="email" value="<%= locals.email%>" >
             </div>
     
             <div class="input-group ">
                 <label for="address">Full Address:</label>
-                <input class="textbox" id="address" type="text" name="address" required>
+                <input class="textbox" id="address" type="text" name="address" value="<%= locals.address%>" >
             </div>
         </div>
 
@@ -69,19 +69,19 @@
 
             <div class="input-group">
                 <label for="username">Username:</label>
-                <input class="textbox" id="username" type="text" name="username" required>
+                <input class="textbox" id="username" type="text" name="username" >
             </div>
 
             <div class="input-group">
                 <label for="password">Password:</label>
-                <input class="textbox" id="password" type="password" name="password" required>
+                <input class="textbox" id="password" type="password" name="password" value="<%= locals.password%>" >
             </div>
 
         </div>
     </form>
 
     
-    <input value="Register" class="submit" id="register-button" name="Next" type="Submit" form="register-form">
+    <input value="Register" class="submit" id="register_button" name="register_button" type="submit" form="register_form">
     <br><p>Already have an account? <a href="login.html">Login</a></p>
 
 </body>

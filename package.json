@@ -1,0 +1,29 @@
+{
+  "name": "qrcode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devstart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/legalNameIsGwyn/hotel-reservation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/legalNameIsGwyn/hotel-reservation/issues"
+  },
+  "homepage": "https://github.com/legalNameIsGwyn/hotel-reservation#readme",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mysql2": "^3.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
