@@ -6,20 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easytel Login</title>
     <link rel="stylesheet" href="/styles/style.css">
+    <script>
+        // Get the message from the query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+      
+        // Display the message in a popup if there is one
+        if (message) {
+          alert(message);
+        }
+    </script>
 </head>
 <body>
     <h1>Easytel Login</h1>
-
+    <% if (locals.message) { %>
+        <span class="error message"><%= locals.message %> </span>
+    <% } %>
     <form action="/login" id="login-form" method="POST" autocomplete="" class="section-box">
 
         <div class="input-group">
             <label for="username">User Name:</label>
-            <input type="text" id="username" name="username" required class="textbox">
+            <input type="text" id="username" name="username" value="<%= locals.username %>" class="textbox">
         </div>
 
         <div class="input-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required class="textbox">
+            <input type="password" id="password" name="password" value="<%= locals.password %>" class="textbox">
         </div>
 
     </form>

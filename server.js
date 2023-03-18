@@ -37,8 +37,19 @@ app
     })  
     .post(async (req, res) => {
         console.log("Loggin in.")
-        try{
+        let username = req.body.username
 
+        try{
+            if(await userExists(username)){
+                const user = await getUser(username);
+                const first_name = user.first_name;
+
+                console.log(first_name)
+
+                res.render('homepage', {first_name : first_name})
+            } else {
+                res.render('login', { message: "Incorrect credentials."})
+            }
         } catch {
             console.log("Error in login.")
 
@@ -64,8 +75,8 @@ app
             addUser(user)
             console.log(`${user[0]} successfully registerd!\n`)
         } else {
-            res.render('register', { message: "Username is already take",
-            user: user})
+            res.render('register', { message: "Username is already taken.",
+            first_name: user[2], last_name: user[3], sex: user[4], age: user[5], birthday: user[6], contact_number: user[7], email: user[8], address: user[9], password: user[1]})
         }
         res.redirect('/login')
     })
@@ -103,5 +114,18 @@ async function addUser(user) {
         } catch (error) {
             console.error(error);
             console.log('Error in addUser')
+    }
+}
+
+async function getUser(username){
+    try {
+        // Insert new user into students
+        let [rows, fields] = await connection.promise().query(
+            'SELECT * FROM users WHERE username = ?', [username]
+        );
+        return rows[0];
+        } catch (error) {
+            console.error(error);
+            console.log('Error in getUser');
     }
 }

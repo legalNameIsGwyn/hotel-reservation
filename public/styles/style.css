@@ -108,3 +108,6 @@ body > * {
     box-shadow: 5px 10px color2;
 }
 
+.error.message {
+    color: red;
+}
