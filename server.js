@@ -3,19 +3,32 @@ console.log("Server is running.");
 const { render } = require('ejs')
 const express = require('express')
 const mysql2 = require('mysql2')
-const MySQLStore = require('express-mysql-session');
+
+const session = require('express-session')
+const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require('bcrypt');
 const app = express()
-const port = 2077
+const port = 3000
 const saltRounds = 10
 const userRouter = require('./routes/users')
 
-const connection = mysql2.createConnection({
+const options = {    
     host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'easytel'
-})
+    user: 'localuser',
+    password: 'password',
+    database: 'easytel',
+    connectionLimit: 10,
+}
+
+const connection = mysql2.createPool(options)
+const sessionStore = new MySQLStore(options)
+
+app.use(session({
+    secret: 'pinakamalupetnasikreto',
+    resave: false,
+    store: sessionStore,
+    saveUninitialized: false
+}))
 
 app.set("view engine", "ejs")
 
@@ -24,7 +37,6 @@ app.use(express.static("public"))
 app.use('/users', userRouter)
 app.use(express.urlencoded({extended: true}))
 
-
 app.get("/", (req, res) => {
     console.log("User entered index.")
     res.render("index")
@@ -32,8 +44,7 @@ app.get("/", (req, res) => {
 
 // ================= LOGIN ==================
 
-app
-    .route("/login")
+app.route("/login")
     .get((req, res) => {
         console.log("User entered login.")
         res.render("login")
@@ -54,11 +65,9 @@ app
                 message: "Incorrect password.", 
                 username : username})
         }
-
         try{
-
             const first_name = user.first_name;
-            console.log(first_name)
+            req.session.name = first_name;
             res.redirect('/dashboard')
         
         } catch {
@@ -70,13 +79,21 @@ app
 
 // ================ DASHBOARD ==================
 
-app.get("/dashboard", (req,res) => {
-    res.render("dashboard")
+app.get("/dashboard", authSession, (req,res) => {
+    console.log(req.session.name);
+    res.render("dashboard", { name: req.session.name})
 })
 // ================ LOGOUT ==================
 
-app.get('/logout', (req, res) => {
-    
+app.get('/logout', authSession, (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error(err)
+            return
+        }
+        console.log(`Log out.`)
+        res.redirect('/login');
+    })
 })
 // ================ REGISTER ==================
 
@@ -111,14 +128,14 @@ console.log("Listening to port " + port + ".");
 async function userExists(username) {
     console.log("Checking if user exists.")
     try {
-        const [rows] = await connection.promise().query(
-            'SELECT * FROM users WHERE username = ?',
-            [username])
+        const [rows] = await connection.promise().execute(
+            'SELECT * FROM users WHERE username = ?', [username]
+        )
         return rows.length > 0
 
     } catch (error) {
         console.error(error);
-        console.log('There was an error in userExists')
+        console.log('\nThere was an error in userExists\n')
         // Return false if there is an error
         return false;
     }
@@ -149,5 +166,13 @@ async function getUser(username){
         } catch (error) {
             console.error(error);
             console.log('Error in getUser');
+    }
+}
+
+function authSession(req, res, next){
+    if (req.session && req.session.name) {
+        next();
+    } else {
+        res.redirect('/login');
     }
 }
