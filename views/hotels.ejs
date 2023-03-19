@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/style.css">
+    <title>Easytel: Hotels</title>
+</head>
+<body>
+    <form id="reservation_form" method="POST" action="/hotels" name="reservation_form" autocomplete="on">
+        <div class="section-box">
+            <label for="checkin"><h2>When will you checkin?</h2></label>
+            <input class="textbox" type="date" id="checkin" name="checkin">
+
+            <label for="checkout"><h2>When will you checkout?</h2></label>
+            <input class="textbox" type="date" id="checkout" name="checkout">
+        </div>
+    </form>
+
+    <div class="buttons">
+        <input value="Save" class="submit" id="reservation_button" name="reservation_button" type="submit" form="reservation_form">
+
+        <button class="back" name="back" onclick="window.history.back()">Back</button>
+    </div>
+</body>
+</html>

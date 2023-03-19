@@ -47,7 +47,8 @@ body > * {
 }
 
 .buttons{
-    
+    flex:1;
+    justify-content: space-between;
 }
 
 .divided {

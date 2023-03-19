@@ -66,8 +66,11 @@ app.route("/login")
                 username : username})
         }
         try{
-            const first_name = user.first_name;
+            let first_name = user.first_name;
+            let username = user.username;
+            
             req.session.name = first_name;
+            req.session.username = username
             res.redirect('/dashboard')
         
         } catch {
@@ -120,11 +123,28 @@ app
         res.redirect('/login')
     })
 
+// ================ RESERVATION =================
+
+app
+    .route('/hotels')
+    .get((req, res) => {
+        res.render('hotels')
+    })
+    .post(async (req, res) => {
+        let reservation = [req.session.username, req.body.checkin, req.body.checkout]
+
+        addReservation(reservation)
+        console.log(await getReservations(req.session.username))
+        
+        res.send(await getReservations(req.session.username))
+    })
+
 app.listen(port);
 console.log("Listening to port " + port + ".");
 
 // ================ FUNCITONS =================
 
+// UESER CONTROL
 async function userExists(username) {
     console.log("Checking if user exists.")
     try {
@@ -166,6 +186,30 @@ async function getUser(username){
         } catch (error) {
             console.error(error);
             console.log('Error in getUser');
+    }
+}
+
+// RESERVATION
+async function addReservation(reservation) {
+    try{
+        await connection.execute(
+            'INSERT INTO reservations (username, checkin, checkout) VALUES (?, ?, ?)', reservation
+        )
+        console.log('Reservation added.')
+    } catch (error){
+        console.log('\nERROR IN addReservation\n')
+    }
+}
+
+async function getReservations(username) {
+    try{
+        let [rows, fields] = await connection.promise().query(
+            'SELECT * FROM reservations WHERE username = ? ORDER BY id DESC', [username]
+        )
+        console.log('Got reservations.')
+        return rows;
+    } catch (error){
+        console.log('\nERROR IN getReservations\n')
     }
 }
 
