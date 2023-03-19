@@ -7,6 +7,8 @@ const qr = require('qrcode')
 const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require('bcrypt');
+const https = require('https')
+const fs = require('fs')
 const app = express()
 const port = 3000
 const saltRounds = 10
@@ -44,6 +46,15 @@ app.get("/", (req, res) => {
     res.render("index")
 })
 
+const opts = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+}
+
+app.listen(3001)
+https.createServer(opts, app).listen(port)
+console.log("Listening to port " + port + ".");
+
 // ================= LOGIN ==================
 
 app.route("/login")
@@ -70,7 +81,9 @@ app.route("/login")
         try{
             let first_name = user.first_name;
             let username = user.username;
+            let hasheduser = await bcrypt.hash(username, saltRounds)
             
+            req.session.hasheduser = hasheduser;
             req.session.name = first_name;
             req.session.username = username
             res.redirect('/dashboard')
@@ -169,9 +182,7 @@ app
 
     })
 
-    
-app.listen(port);
-console.log("Listening to port " + port + ".");
+
 
 // ================ FUNCITONS =================
 
