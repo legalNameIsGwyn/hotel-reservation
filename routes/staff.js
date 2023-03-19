@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
+const QrCode = require('qrcode-reader');
+const Jimp = require('jimp');
+const fs = require('fs');
+
 
 router
     .route("/")
