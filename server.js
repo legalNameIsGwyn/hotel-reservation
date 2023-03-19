@@ -123,22 +123,49 @@ app
         res.redirect('/login')
     })
 
-// ================ RESERVATION =================
+// ================ HOTELS =================
 
 app
     .route('/hotels')
-    .get((req, res) => {
+    .get(authSession,(req, res) => {
         res.render('hotels')
     })
     .post(async (req, res) => {
         let reservation = [req.session.username, req.body.checkin, req.body.checkout]
 
         addReservation(reservation)
-        console.log(await getReservations(req.session.username))
-        
-        res.send(await getReservations(req.session.username))
+        res.redirect('dashboard')
     })
 
+// ================ RESERVATION =================
+app
+    .route('/reservations')
+    .get(async (req,res) => {
+        let reservations = await getReservations(req.session.username)
+        res.send(reservations[0])
+        res.render('reservations')
+
+    })
+    .post(async (req, res) => {
+        console.log("in reservations_history")
+
+    })
+
+// ================ QR CODE =================
+app
+    .route('/qrcode')
+    .get(async (req,res) => {
+        let reservations = await getReservations(req.session.username)
+        
+
+
+    })
+    .post(async (req, res) => {
+        console.log("in reservations_history")
+
+    })
+
+    
 app.listen(port);
 console.log("Listening to port " + port + ".");
 
