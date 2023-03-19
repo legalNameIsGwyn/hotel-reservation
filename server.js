@@ -143,7 +143,6 @@ app
     .get(async (req,res) => {
         let reservations = await getReservations(req.session.username)
         res.send(reservations[0])
-        res.render('reservations')
 
     })
     .post(async (req, res) => {
@@ -155,10 +154,12 @@ app
 app
     .route('/qrcode')
     .get(async (req,res) => {
-        
-        const qrImage = await generateQR(req.session.username);
-        res.send(`<img src="${qrImage}"/>`);
+        let hashed = await bcrypt.hash(req.session.username, saltRounds)
+        console.log(hashed)
+        const qrImage = await generateQR(hashed);
 
+        console.log()
+        res.send(`<img src="${qrImage}"/>`);
 
     })
     .post(async (req, res) => {

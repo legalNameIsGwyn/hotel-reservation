@@ -17,7 +17,7 @@
             <div class="input-group divided">
                 <div class="divider">
                     <label for="first_name">First Name:</label>
-                    <input class="textbox" id="first_name" type="text" name="first_name" value="<%= locals.first_name %>"  >
+                    <input class="textbox" id="first_name" type="text" name="first_name" value="<%= locals.first_name %>"  required>
                 </div>
         
                 <div class="divider">
@@ -70,12 +70,12 @@
 
             <div class="input-group">
                 <label for="username"<% if (locals.message) { %> autofocus <% } %>>Username:</label>
-                <input class="textbox" id="username" type="text" name="username" >
+                <input class="textbox" id="username" type="text" name="username" required>
             </div>
 
             <div class="input-group">
                 <label for="password">Password:</label>
-                <input class="textbox" id="password" type="password" name="password" value="<%= locals.password %>" >
+                <input class="textbox" id="password" type="password" name="password" value="<%= locals.password %>" required>
             </div>
 
         </div>
