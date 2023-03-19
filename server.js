@@ -11,6 +11,7 @@ const app = express()
 const port = 3000
 const saltRounds = 10
 const userRouter = require('./routes/users')
+const staffRouter = require('./routes/staff')
 
 const options = {    
     host: 'localhost',
@@ -35,6 +36,7 @@ app.set("view engine", "ejs")
 // serve file inside public
 app.use(express.static("public"))
 app.use('/users', userRouter)
+app.use('/staff', staffRouter)
 app.use(express.urlencoded({extended: true}))
 
 app.get("/", (req, res) => {
