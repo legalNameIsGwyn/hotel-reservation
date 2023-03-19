@@ -3,7 +3,7 @@ console.log("Server is running.");
 const { render } = require('ejs')
 const express = require('express')
 const mysql2 = require('mysql2')
-
+const qr = require('qrcode')
 const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require('bcrypt');
@@ -155,8 +155,9 @@ app
 app
     .route('/qrcode')
     .get(async (req,res) => {
-        let reservations = await getReservations(req.session.username)
         
+        const qrImage = await generateQR(req.session.username);
+        res.send(`<img src="${qrImage}"/>`);
 
 
     })
@@ -245,5 +246,13 @@ function authSession(req, res, next){
         next();
     } else {
         res.redirect('/login');
+    }
+}
+
+const generateQR = async text => {
+    try {
+      return await qr.toDataURL(text);
+    } catch (err) {
+      console.error(err);
     }
 }
