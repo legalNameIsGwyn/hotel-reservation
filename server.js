@@ -3,8 +3,11 @@ console.log("Server is running.");
 const { render } = require('ejs')
 const express = require('express')
 const mysql2 = require('mysql2')
+const MySQLStore = require('express-mysql-session');
+const bcrypt = require('bcrypt');
 const app = express()
 const port = 2077
+const saltRounds = 10
 const userRouter = require('./routes/users')
 
 const connection = mysql2.createConnection({
@@ -38,18 +41,26 @@ app
     .post(async (req, res) => {
         console.log("Loggin in.")
         let username = req.body.username
+        let password = req.body.password
+
+        let user = await getUser(username)
+
+        if(!await userExists(username)){
+            res.render('login', { message: "User does not exist."})
+        }
+
+        if (!await bcrypt.compare(password, user.password)){
+            res.render('login', { 
+                message: "Incorrect password.", 
+                username : username})
+        }
 
         try{
-            if(await userExists(username)){
-                const user = await getUser(username);
-                const first_name = user.first_name;
 
-                console.log(first_name)
-
-                res.render('homepage', {first_name : first_name})
-            } else {
-                res.render('login', { message: "Incorrect credentials."})
-            }
+            const first_name = user.first_name;
+            console.log(first_name)
+            res.redirect('/dashboard')
+        
         } catch {
             console.log("Error in login.")
 
@@ -57,17 +68,28 @@ app
         }
     })
 
+// ================ DASHBOARD ==================
+
+app.get("/dashboard", (req,res) => {
+    res.render("dashboard")
+})
+// ================ LOGOUT ==================
+
+app.get('/logout', (req, res) => {
+    
+})
 // ================ REGISTER ==================
 
 app
     .route("/register")
     .get((req, res) => {
-        console.log("User entered register.")
         res.render("register");
     })
     .post(async (req, res) => {
         console.log("Registering")
-        const user = [req.body.username, req.body.password, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.birthday, req.body.contact_number, req.body.email, req.body.address, 1]
+        let password = req.body.password
+        let hashed = await bcrypt.hash(password, saltRounds)
+        const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.birthday, req.body.contact_number, req.body.email, req.body.address, 1]
 
         console.log(user)
 
@@ -76,12 +98,12 @@ app
             console.log(`${user[0]} successfully registerd!\n`)
         } else {
             res.render('register', { message: "Username is already taken.",
-            first_name: user[2], last_name: user[3], sex: user[4], age: user[5], birthday: user[6], contact_number: user[7], email: user[8], address: user[9], password: user[1]})
+            first_name: user[2], last_name: user[3], sex: user[4], age: user[5], birthday: user[6], contact_number: user[7], email: user[8], address: user[9], password: password})
         }
         res.redirect('/login')
     })
 
-app.listen(2077);
+app.listen(port);
 console.log("Listening to port " + port + ".");
 
 // ================ FUNCITONS =================
