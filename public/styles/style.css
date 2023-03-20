@@ -134,3 +134,11 @@ body > * {
 #reader img:first-of-type {
     visibility: hidden !important;
 }
+@media only screen and (max-width: 750px) {
+    .section-box{
+        background-color: red;
+    }
+    body{
+        background-color: orange;
+    }
+}

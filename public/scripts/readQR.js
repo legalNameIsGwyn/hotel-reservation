@@ -1,14 +1,21 @@
+
 let serverAddress = "https://192.168.1.7:3000/staff/readQR"
 
 function onScanSuccess(decodedText, decodedResult) {
+    html5QrcodeScanner.clear();
     fetch(serverAddress, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        'Cookie': document.cookie,
+        mode: 'cors',
         body: JSON.stringify({text: decodedText})
+    }).then((response) => {
+        if(response.redirected){
+            window.location.href = response.url;
+        }
     })
-    html5QrcodeScanner.clear();
-
+    .catch((error) => {
+        console.log('Error', error)
+    });
 }
 
 function onScanFailure(error) {

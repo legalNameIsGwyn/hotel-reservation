@@ -2,7 +2,6 @@ console.log("Server is running.");
 
 const { render } = require('ejs')
 const express = require('express')
-const mysql2 = require('mysql2')
 const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require('bcrypt');
@@ -25,7 +24,6 @@ const {
     authSession,
     generateQR,
   } = require('./server-utils');
-const { secretKey } = require('./config');
   
 const options = {    
     host: 'localhost',
@@ -35,7 +33,6 @@ const options = {
     connectionLimit: 10,
 }
 
-const connection = mysql2.createPool(options)
 const sessionStore = new MySQLStore(options)
 
 app.use(session({
@@ -194,7 +191,19 @@ app
         console.log("staff in readQR")
         res.render("readQR")
     })
-    .post(jsonParser,async (req,res) => {
-        let decodedText = decrypt(req.body.text)
-        console.log('decryption success:', decodedText)
+    .post(jsonParser, async (req, res) => {
+        let username = await decrypt(req.body.text)
+        res.redirect(`/userdata/${username}`)
+    })
+        // let decodedText = decrypt(req.body.text)
+        // console.log(decodedText)
+app
+    .route('/userdata/:username')
+    .get(async(req,res) => {
+        let username = req.params.username;
+        let user = await getUser(username);
+        let reservations = await getReservations(username);
+        console.log(username)
+        console.log(user)
+        res.render('userdata', { user: user, bookings: reservations });
     })

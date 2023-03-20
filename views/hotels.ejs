@@ -21,7 +21,10 @@
     <div class="buttons">
         <input value="Save" class="submit" id="reservation_button" name="reservation_button" type="submit" form="reservation_form">
 
-        <button class="back" name="back" onclick="window.history.back()">Back</button>
+        <form action="/dashboard" method="get">
+            <button type="submit">Back</button>
+        </form>
+    
     </div>
 </body>
 </html>
