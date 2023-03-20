@@ -167,15 +167,14 @@ app
 
 // ================ QR CODE =================
 app
-    .route('/qrcode')
+    .route('/userQR')
     .get(async (req,res) => {
         let hashed = await bcrypt.hash(req.session.username, saltRounds)
         console.log(hashed)
-        const qrImage = await generateQR(hashed);
+        const qrImage = await generateQR(hashed, {version: 40});
 
         console.log()
-        res.send(`<img src="${qrImage}"/>`);
-
+        res.render('userQR', {qrImage});
     })
     .post(async (req, res) => {
         console.log("in reservations_history")
@@ -265,7 +264,12 @@ function authSession(req, res, next){
 
 const generateQR = async text => {
     try {
-      return await qr.toDataURL(text);
+      return await qr.toDataURL(text, {
+        version: 14,
+        color:{
+        dark: '#000000',
+        light: '#0000'
+      } });
     } catch (err) {
       console.error(err);
     }

@@ -8,6 +8,11 @@
 <body>
     <h1>Read QR</h1>
     <div style="width: 500px" id="reader"></div>
-    <script src="/scripts/html5-qrcode.min.js"></script>
-    <script src="/scripts/script.js"></script>
+
+    <% if (locals.message) { %>
+      <span class="user-data"><%= locals.message %> </span>
+    <% } else { %>
+      <script src="/scripts/html5-qrcode.min.js"></script>
+      <script src="/scripts/readQR.js"></script>
+    <% } %>
 </html>

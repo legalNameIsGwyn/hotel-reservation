@@ -18,5 +18,9 @@ router
         console.log("staff in readQR")
         res.render("readQR")
     })
+    .post((req,res) => {
+        console.log("qrcode received")
+        console.log(req.body)
+    })
 
 module.exports = router

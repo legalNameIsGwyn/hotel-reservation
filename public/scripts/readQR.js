@@ -1,6 +1,12 @@
+
 function onScanSuccess(decodedText, decodedResult) {
-    // handle the scanned code as you like, for example:
+    
     console.log(`Code matched = ${decodedText}`, decodedResult);
+    fetch('https://localhost:3000/staff/readQR',{
+        method: 'POST',
+        body: decodedText
+    })
+    html5QrcodeScanner.clear()
 }
   
 function onScanFailure(error) {
