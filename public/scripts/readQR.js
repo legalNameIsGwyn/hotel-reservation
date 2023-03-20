@@ -1,18 +1,14 @@
-window.onload = function() {
-    fetch('https://192.168.1.7:3000/staff/readQR', {
+let serverAddress = "https://192.168.1.7:3000/staff/readQR"
+
+function onScanSuccess(decodedText, decodedResult) {
+    fetch(serverAddress, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message: 'Hello server!'})
-    })
-}
-function onScanSuccess(decodedText, decodedResult) {
-    let dataDiv = document.getElementById("user-data");
-    fetch('https://192.168.1.7:3000/staff/readQR', {
-      method: 'POST',
-      body: decodedText
+        'Cookie': document.cookie,
+        body: JSON.stringify({text: decodedText})
     })
     html5QrcodeScanner.clear();
-    dataDiv.textContent = decodedText
+
 }
 
 function onScanFailure(error) {

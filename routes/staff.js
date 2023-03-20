@@ -1,11 +1,10 @@
 const express = require('express')
 const router = express.Router()
-
-const QrCode = require('qrcode-reader');
-const Jimp = require('jimp');
-const fs = require('fs');
-
-
+const bodyParser = require('body-parser')
+let jsonParser = bodyParser.json()
+const { secretKey } = require('../config');
+const { decrypt } = require('../server-utils');
+  
 router
     .route("/")
     .get((req,res) => {
@@ -18,9 +17,11 @@ router
         console.log("staff in readQR")
         res.render("readQR")
     })
-    .post((req,res) => {
-        console.log("qrcode received")
-        console.log(req.body)
+    .post(jsonParser,async (req,res) => {
+        console.log(secretKey)
+        let decodedText = await decrypt(req.body.text)
+        console.log(decodedText)
+        
     })
 
 module.exports = router

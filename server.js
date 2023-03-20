@@ -4,7 +4,6 @@ const { render } = require('ejs')
 const express = require('express')
 const bodyparser = require('body-parser')
 const mysql2 = require('mysql2')
-const qr = require('qrcode')
 const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require('bcrypt');
@@ -15,7 +14,19 @@ const port = 3000
 const saltRounds = 10
 const userRouter = require('./routes/users')
 const staffRouter = require('./routes/staff')
-
+const {
+    encrypt,
+    decrypt,
+    userExists,
+    addUser,
+    getUser,
+    addReservation,
+    getReservations,
+    authSession,
+    generateQR,
+  } = require('./server-utils');
+const { secretKey } = require('./config');
+  
 const options = {    
     host: 'localhost',
     user: 'localuser',
@@ -69,11 +80,12 @@ app.route("/login")
         let username = req.body.username
         let password = req.body.password
 
-        let user = await getUser(username)
-
+    
         if(!await userExists(username)){
             res.render('login', { message: "User does not exist."})
         }
+
+        let user = await getUser(username)
 
         if (!await bcrypt.compare(password, user.password)){
             res.render('login', { 
@@ -81,18 +93,15 @@ app.route("/login")
                 username : username})
         }
         try{
-            let first_name = user.first_name;
-            let username = user.username;
-            let hasheduser = await bcrypt.hash(username, saltRounds)
-            
-            req.session.hasheduser = hasheduser;
-            req.session.name = first_name;
+            console.log(secretKey)
+            let username = encrypt(user.username);
+            console.log(secretKey)
             req.session.username = username
             res.redirect('/dashboard')
         
-        } catch {
-            console.log("Error in login.")
-
+        } catch(e) {
+            console.log("\nError in login.")
+            console.error(e)
             res.render('login')
         }
     })
@@ -100,8 +109,7 @@ app.route("/login")
 // ================ DASHBOARD ==================
 
 app.get("/dashboard", authSession, (req,res) => {
-    console.log(req.session.name);
-    res.render("dashboard", { name: req.session.name})
+    res.render("dashboard")
 })
 // ================ LOGOUT ==================
 
@@ -171,9 +179,8 @@ app
 app
     .route('/userQR')
     .get(async (req,res) => {
-        let hashed = await bcrypt.hash(req.session.username, saltRounds)
-        console.log(hashed)
-        const qrImage = await generateQR(hashed, {version: 40});
+
+        const qrImage = await generateQR(req.session.username);
 
         console.log()
         res.render('userQR', {qrImage});
@@ -182,97 +189,3 @@ app
         console.log("in reservations_history")
 
     })
-
-
-
-// ================ FUNCITONS =================
-
-// UESER CONTROL
-async function userExists(username) {
-    console.log("Checking if user exists.")
-    try {
-        const [rows] = await connection.promise().execute(
-            'SELECT * FROM users WHERE username = ?', [username]
-        )
-        return rows.length > 0
-
-    } catch (error) {
-        console.error(error);
-        console.log('\nThere was an error in userExists\n')
-        // Return false if there is an error
-        return false;
-    }
-}
-
-async function addUser(user) {
-    try {
-        // Insert new user into students
-        await connection.execute(
-            'INSERT INTO users (username, password, first_name, last_name, sex, age, contact_number, birthday, email, address, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            user
-        );
-        console.log(`User ${user[0]} added to users`)
-        
-        } catch (error) {
-            console.error(error);
-            console.log('Error in addUser')
-    }
-}
-
-async function getUser(username){
-    try {
-        // Insert new user into students
-        let [rows, fields] = await connection.promise().query(
-            'SELECT * FROM users WHERE username = ?', [username]
-        );
-        return rows[0];
-        } catch (error) {
-            console.error(error);
-            console.log('Error in getUser');
-    }
-}
-
-// RESERVATION
-async function addReservation(reservation) {
-    try{
-        await connection.execute(
-            'INSERT INTO reservations (username, checkin, checkout) VALUES (?, ?, ?)', reservation
-        )
-        console.log('Reservation added.')
-    } catch (error){
-        console.log('\nERROR IN addReservation\n')
-    }
-}
-
-async function getReservations(username) {
-    try{
-        let [rows, fields] = await connection.promise().query(
-            'SELECT * FROM reservations WHERE username = ? ORDER BY id DESC', [username]
-        )
-        console.log('Got reservations.')
-        return rows;
-    } catch (error){
-        console.log('\nERROR IN getReservations\n')
-    }
-}
-
-function authSession(req, res, next){
-    if (req.session && req.session.name) {
-        next();
-    } else {
-        res.redirect('/login');
-    }
-}
-
-const generateQR = async text => {
-    try {
-      return await qr.toDataURL(text, {
-        version: 13,
-        color:{
-        dark: '#000000',
-        light: '#0000'
-      } });
-    } catch (err) {
-      console.error(err);
-    }
-}
