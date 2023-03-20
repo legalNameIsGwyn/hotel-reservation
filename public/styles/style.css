@@ -136,9 +136,7 @@ body > * {
 }
 @media only screen and (max-width: 750px) {
     .section-box{
-        background-color: red;
-    }
-    body{
-        background-color: orange;
+        max-width: 100%;
+        width: 90% !important;
     }
 }

@@ -1,5 +1,3 @@
-console.log("Server is running.");
-
 const { render } = require('ejs')
 const express = require('express')
 const session = require('express-session')
@@ -7,11 +5,11 @@ const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require('bcrypt');
 const https = require('https')
 const fs = require('fs')
-const jsonParser = express.json()
 const app = express()
 const port = 3000
 const saltRounds = 10
-const userRouter = require('./routes/users')
+const userRouter = require('./routes/user')
+const staffRouter = require('./routes/staff')
 
 const {
     encrypt,
@@ -43,17 +41,23 @@ app.use(session({
 }))
 
 app.set("view engine", "ejs")
+app.set('Views', [
+    __dirname + '/views/admin',
+    __dirname + '/views/user'
+])
 
 // serve file inside public
 app.use(express.static("public"))
-app.use('/users', userRouter)
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
+app.use('/user', userRouter)
+app.use('/staff', staffRouter)
+
 app.get("/", (req, res) => {
-    console.log("User entered index.")
     res.render("index")
 })
+
 
 const opts = {
     key: fs.readFileSync('key.pem'),
@@ -90,9 +94,9 @@ app.route("/login")
         }
         try{
 
-            let username = encrypt(user.username);
-            req.session.username = username
-            res.redirect('/dashboard')
+            let encryptedUsername = encrypt(user.username);
+            req.session.username = encryptedUsername
+            res.redirect(`user/dash`)
         
         } catch(e) {
             console.log("\nError in login.")
@@ -143,32 +147,7 @@ app
         res.redirect('/login')
     })
 
-// ================ HOTELS =================
 
-app
-    .route('/hotels')
-    .get(authSession,(req, res) => {
-        res.render('hotels')
-    })
-    .post(async (req, res) => {
-        let reservation = [req.session.username, req.body.checkin, req.body.checkout]
-
-        addReservation(reservation)
-        res.redirect('dashboard')
-    })
-
-// ================ RESERVATION =================
-app
-    .route('/reservations')
-    .get(async (req,res) => {
-        let reservations = await getReservations(req.session.username)
-        res.send(reservations[0])
-
-    })
-    .post(async (req, res) => {
-        console.log("in reservations_history")
-
-    })
 
 // ================ QR CODE =================
 app
@@ -183,27 +162,4 @@ app
     .post(async (req, res) => {
         console.log("in reservations_history")
 
-    })
-// ================= STAFF ======================
-app
-    .route("/staff/readQR")
-    .get((req,res) => {
-        console.log("staff in readQR")
-        res.render("readQR")
-    })
-    .post(jsonParser, async (req, res) => {
-        let username = await decrypt(req.body.text)
-        res.redirect(`/userdata/${username}`)
-    })
-        // let decodedText = decrypt(req.body.text)
-        // console.log(decodedText)
-app
-    .route('/userdata/:username')
-    .get(async(req,res) => {
-        let username = req.params.username;
-        let user = await getUser(username);
-        let reservations = await getReservations(username);
-        console.log(username)
-        console.log(user)
-        res.render('userdata', { user: user, bookings: reservations });
     })
