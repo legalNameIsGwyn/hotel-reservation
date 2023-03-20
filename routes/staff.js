@@ -32,20 +32,18 @@ router
 router
     .route("/readQR")
     .get((req,res) => {
-        console.log("staff in readQR")
-        res.render("readQR")
+        res.render("staff/readQR")
     })
     .post(jsonParser, async (req, res) => {
         let username = await decrypt(req.body.text)
         res.redirect(`/userdata/${username}`)
     })
-        // let decodedText = decrypt(req.body.text)
-        // console.log(decodedText)
+
 router
     .route('/userdata/:username')
     .get(async(req,res) => {
         let username = req.params.username;
-        let user = await getUser(username);
+        let user = await getUser(username, "users");
 
         res.render('basicUserData', { user: user});
     })

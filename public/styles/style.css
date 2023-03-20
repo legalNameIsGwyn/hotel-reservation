@@ -109,7 +109,7 @@ body > * {
 
 .back:hover, button:hover  {
     background-color: var(--color4);
-    box-shadow: 5px 10px color2;
+    box-shadow: 5px 10px var(--color2);
 }
 
 .error.message {

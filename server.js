@@ -139,16 +139,12 @@ app
         console.log("Registering")
         let password = req.body.password
         let hashed = await bcrypt.hash(password, saltRounds)
-        const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.birthday, req.body.contact_number, req.body.email, req.body.address, 1]
-
-        console.log(user)
+        const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.contact_number, req.body.birthday.valueOf(), req.body.email, req.body.address, 1]
 
         if(!await userExists(user[0], "users")){
             addUser(user)
-            console.log(`${user[0]} successfully registerd!\n`)
         } else {
-            res.render('register', { message: "Username is already taken.",
-            first_name: user[2], last_name: user[3], sex: user[4], age: user[5], birthday: user[6], contact_number: user[7], email: user[8], address: user[9], password: password})
+            res.render('register', { message: "Username is already taken."})
         }
         res.redirect('/login')
     })

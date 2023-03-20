@@ -58,10 +58,11 @@ router
 router
     .route('/profile')
     .get(authSession,async (req,res) => {
+        console.log("visiting profile")
         let username = await decrypt(req.session.username)
-        let user = await getUser(username)
+        let user = await getUser(username, "users")
         let bookings = await getReservations(username)
-
+        console.log(user)
         res.render('user/profile', {user : user, bookings : bookings})
     })
 
