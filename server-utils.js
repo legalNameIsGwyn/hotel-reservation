@@ -32,13 +32,19 @@ function decrypt(text) {
     return decrypted.toString();
 }
 
-async function userExists(username) {
-    console.log("Checking if user exists.")
+async function userExists(username, table) {
     try {
-        const [rows] = await connection.promise().execute(
-            'SELECT * FROM users WHERE username = ?', [username]
-        )
-        return rows.length > 0
+        if(table == "users"){
+            const [rows] = await connection.promise().execute(
+                'SELECT * FROM users WHERE username = ?', [username]
+            )
+            return rows.length > 0
+        } else if (table == "admins"){
+            const [rows] = await connection.promise().execute(
+                'SELECT * FROM admins WHERE username = ?', [username]
+            )
+            return rows.length > 0
+        }
 
     } catch (error) {
         console.error(error);
@@ -63,13 +69,22 @@ async function addUser(user) {
     }
 }
 
-async function getUser(username){
+async function getUser(username, table){
+    
     try {
-        // Insert new user into students
-        let [rows, fields] = await connection.promise().query(
-            'SELECT * FROM users WHERE username = ?', [username]
-        );
-        return rows[0];
+        if(table == "users"){
+            let [rows, fields] = await connection.promise().query(
+                'SELECT * FROM users WHERE username = ?', [username]
+            );
+            console.log(rows[0])
+            return rows[0];
+        } else if (table == "admins") {
+            let [rows, fields] = await connection.promise().query(
+                'SELECT * FROM admins WHERE username = ?', [username]
+            );
+            console.log(rows[0])
+            return rows[0];
+        }
         } catch (error) {
             console.error(error);
             console.log('Error in getUser');

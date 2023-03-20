@@ -1,6 +1,8 @@
 const express = require('express')
+const bcrypt = require('bcrypt')
 const router = express.Router()
 const jsonParser = express.json()
+
 const {
     encrypt,
     decrypt,
@@ -16,9 +18,19 @@ const {
 router.get("/", (req, res) => {
     res.send("you're logged in staff")
 })
-// ================= STAFF ======================
+// ================ DASHBOARD =====================
 router
-    .route("/staff/readQR")
+    .route('/dash')
+    .get(authSession, (req, res) => {
+        res.render('staff/staffDash')
+    })
+    .post(authSession, (req, res) => {
+        
+    })
+
+// ================= READ QR ======================
+router
+    .route("/readQR")
     .get((req,res) => {
         console.log("staff in readQR")
         res.render("readQR")

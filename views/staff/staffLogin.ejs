@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easytel Staff Login</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>Easytel Staff Login</h1>
+    <% if (locals.message) { %>
+        <span class="error message"><%= locals.message %> </span>
+    <% } %>
+    <form action="/staff/login" id="admin-login-form" method="POST" autocomplete="" class="section-box">
+
+        <div class="input-group">
+            <label for="username">User Name:</label>
+            <input type="text" id="username" name="username" value="<%= locals.username %>" class="textbox">
+        </div>
+
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" value="<%= locals.password %>" class="textbox">
+        </div>
+
+    </form>
+    <input type="submit" form="admin-login-form" name="login" value="Login">
+
+</body>
+</html>

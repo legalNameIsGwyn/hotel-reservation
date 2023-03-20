@@ -76,40 +76,45 @@ app.route("/login")
         res.render("login")
     })  
     .post(async (req, res) => {
-        console.log("Loggin in.")
         let username = req.body.username
         let password = req.body.password
 
-    
-        if(!await userExists(username)){
-            res.render('login', { message: "User does not exist."})
-        }
-
-        let user = await getUser(username)
-
-        if (!await bcrypt.compare(password, user.password)){
-            res.render('login', { 
-                message: "Incorrect password.", 
-                username : username})
-        }
+        let userInUSERS = await userExists(username, "users")
+        let userInADMIN = await userExists(username, "admins")
         try{
+        if(!userInUSERS && !userInADMIN){
+            res.render('login', { message: "User does not exist."})
+        } else if (userInUSERS) {
+            let user = await getUser(username, "users")
 
+            if (!await bcrypt.compare(password, user.password)){
+                res.render('login', { 
+                    message: "Incorrect password.", 
+                    username : username})
+            }
+            
             let encryptedUsername = encrypt(user.username);
             req.session.username = encryptedUsername
             res.redirect(`user/dash`)
-        
-        } catch(e) {
+        } else if (userInADMIN) {
+            let user = await getUser(username, "admins")
+            if(password != user.password){
+                res.render('login', { 
+                    message: "Incorrect password.", 
+                    username : username})
+            }
+            let encryptedUsername = encrypt(user.username);
+            req.session.username = encryptedUsername
+            res.redirect(`staff/dash`)
+        } 
+
+        }catch(e) {
             console.log("\nError in login.")
             console.error(e)
             res.render('login')
-        }
+        } 
     })
 
-// ================ DASHBOARD ==================
-
-app.get("/dashboard", authSession, (req,res) => {
-    res.render("dashboard")
-})
 // ================ LOGOUT ==================
 
 app.get('/logout', authSession, (req, res) => {
@@ -122,6 +127,7 @@ app.get('/logout', authSession, (req, res) => {
         res.redirect('/login');
     })
 })
+
 // ================ REGISTER ==================
 
 app
@@ -137,7 +143,7 @@ app
 
         console.log(user)
 
-        if(!await userExists(user[0])){
+        if(!await userExists(user[0], "users")){
             addUser(user)
             console.log(`${user[0]} successfully registerd!\n`)
         } else {
@@ -145,21 +151,4 @@ app
             first_name: user[2], last_name: user[3], sex: user[4], age: user[5], birthday: user[6], contact_number: user[7], email: user[8], address: user[9], password: password})
         }
         res.redirect('/login')
-    })
-
-
-
-// ================ QR CODE =================
-app
-    .route('/userQR')
-    .get(async (req,res) => {
-        
-        console.log("in userQR")
-        const qrImage = await generateQR(req.session.username);
-
-        res.render('userQR', {qrImage});
-    })
-    .post(async (req, res) => {
-        console.log("in reservations_history")
-
     })

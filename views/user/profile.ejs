@@ -1,3 +1,6 @@
+<head>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
 
 <link rel="stylesheet" href="/styles/style.css">
 <h1>User Profile</h1>
@@ -14,6 +17,14 @@
     <p><strong>Address:</strong> <%= user.address %></p>
     <p><strong>Active:</strong> <%= user.active.toString('hex') %></p>
 </div>
+<div class="buttons">
+    <form action="dash" method="get">
+        <button type="submit">Back</button>
+    </form>
+    <form action="dash" method="post">
+        <button type="submit">Edit</button>
+    </form>
+</div>
 <h1>Bookings</h1>
 <div id="bookings">
     <% if (bookings.length > 0) { %>
@@ -28,7 +39,6 @@
     <p>No bookings found.</p>
     <% } %>
 </div>
-<form action="/dashboard" method="get">
-    <button type="submit">Back</button>
-</form>
+
+
 
