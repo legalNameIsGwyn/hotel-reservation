@@ -121,3 +121,16 @@ body > * {
     display: block;
     margin: 0 auto;
 }
+
+#reader{
+    border: none !important;
+}
+#html5-qrcode-select-camera{
+    margin-bottom: 40px !important;
+}
+#html5-qrcode-anchor-scan-type-change{
+    margin-top: 30px !important;
+}
+#reader img:first-of-type {
+    visibility: hidden !important;
+}

@@ -2,18 +2,18 @@ console.log("Server is running.");
 
 const { render } = require('ejs')
 const express = require('express')
-const bodyparser = require('body-parser')
 const mysql2 = require('mysql2')
 const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session);
 const bcrypt = require('bcrypt');
 const https = require('https')
 const fs = require('fs')
+const jsonParser = express.json()
 const app = express()
 const port = 3000
 const saltRounds = 10
 const userRouter = require('./routes/users')
-const staffRouter = require('./routes/staff')
+
 const {
     encrypt,
     decrypt,
@@ -50,7 +50,6 @@ app.set("view engine", "ejs")
 // serve file inside public
 app.use(express.static("public"))
 app.use('/users', userRouter)
-app.use('/staff', staffRouter)
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
@@ -93,9 +92,8 @@ app.route("/login")
                 username : username})
         }
         try{
-            console.log(secretKey)
+
             let username = encrypt(user.username);
-            console.log(secretKey)
             req.session.username = username
             res.redirect('/dashboard')
         
@@ -179,13 +177,24 @@ app
 app
     .route('/userQR')
     .get(async (req,res) => {
-
+        
+        console.log("in userQR")
         const qrImage = await generateQR(req.session.username);
 
-        console.log()
         res.render('userQR', {qrImage});
     })
     .post(async (req, res) => {
         console.log("in reservations_history")
 
+    })
+// ================= STAFF ======================
+app
+    .route("/staff/readQR")
+    .get((req,res) => {
+        console.log("staff in readQR")
+        res.render("readQR")
+    })
+    .post(jsonParser,async (req,res) => {
+        let decodedText = decrypt(req.body.text)
+        console.log('decryption success:', decodedText)
     })
