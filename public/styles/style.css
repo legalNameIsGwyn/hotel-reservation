@@ -113,9 +113,11 @@ body > * {
     color: red;
 }
 .qrcode-container{
-
+    display: flex;
+    justify-content: center;
 }
 
 .qrcode-container img{
-
+    display: block;
+    margin: 0 auto;
 }

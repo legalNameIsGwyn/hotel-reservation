@@ -2,6 +2,7 @@ console.log("Server is running.");
 
 const { render } = require('ejs')
 const express = require('express')
+const bodyparser = require('body-parser')
 const mysql2 = require('mysql2')
 const qr = require('qrcode')
 const session = require('express-session')
@@ -40,6 +41,7 @@ app.use(express.static("public"))
 app.use('/users', userRouter)
 app.use('/staff', staffRouter)
 app.use(express.urlencoded({extended: true}))
+app.use(express.json())
 
 app.get("/", (req, res) => {
     console.log("User entered index.")
@@ -51,7 +53,7 @@ const opts = {
     cert: fs.readFileSync('cert.pem')
 }
 
-app.listen(3001)
+
 https.createServer(opts, app).listen(port)
 console.log("Listening to port " + port + ".");
 
@@ -265,7 +267,7 @@ function authSession(req, res, next){
 const generateQR = async text => {
     try {
       return await qr.toDataURL(text, {
-        version: 14,
+        version: 13,
         color:{
         dark: '#000000',
         light: '#0000'
