@@ -18,11 +18,16 @@
     <p><strong>Address:</strong> <%= user.address %></p>
     <p><strong>Active:</strong> <%= user.active.toString('hex') %></p>
 </div>
+
+<h1>ID</h1>
+<div class="front-id-box section-box">
+</div>
+
 <div class="buttons">
     <form action="dash" method="get">
         <button type="submit">Back</button>
     </form>
-    <form action="dash" method="post">
+    <form action="edit" method="get">
         <button type="submit">Edit</button>
     </form>
 </div>
@@ -40,6 +45,6 @@
     <p>No bookings found.</p>
     <% } %>
 </div>
-
+<a href="/delete">Delete Account</a>
 
 

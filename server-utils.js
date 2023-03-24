@@ -1,5 +1,6 @@
 const mysql2 = require('mysql2');
 const crypto = require('crypto');
+const fs = require('fs')
 const { secretKey } = require('./config');
 const qr = require('qrcode')
 
@@ -61,7 +62,6 @@ async function addUser(user) {
             'INSERT INTO users (username, password, first_name, last_name, sex, age, contact_number, birthday, email, address, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             user
         );
-        console.log(`User ${user[0]} added to users`)
         
         } catch (error) {
             console.error(error);
@@ -76,13 +76,11 @@ async function getUser(username, table){
             let [rows, fields] = await connection.promise().query(
                 'SELECT * FROM users WHERE username = ?', [username]
             );
-            console.log(rows[0])
             return rows[0];
         } else if (table == "admins") {
             let [rows, fields] = await connection.promise().query(
                 'SELECT * FROM admins WHERE username = ?', [username]
             );
-            console.log(rows[0])
             return rows[0];
         }
         } catch (error) {
@@ -109,7 +107,6 @@ async function getReservations(username) {
         let [rows, fields] = await connection.promise().query(
             'SELECT * FROM reservations WHERE username = ? ORDER BY id DESC', [username]
         )
-        console.log('Got reservations.')
         return rows;
     } catch (error){
         console.log('\nERROR IN getReservations\n')
@@ -136,4 +133,12 @@ const generateQR = async text => {
     }
 }
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, authSession, generateQR };
+function uploadImage(username) {
+    const imageBuffer = fs.readFileSync()
+}
+
+async function updateUser(data, username){
+
+}
+
+module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, authSession, generateQR, updateUser };

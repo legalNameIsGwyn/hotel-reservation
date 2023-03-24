@@ -25,8 +25,8 @@ const {
   
 const options = {    
     host: 'localhost',
-    user: 'localuser',
-    password: 'password',
+    user: 'root',
+    password: '',
     database: 'easytel',
     connectionLimit: 10,
 }
@@ -72,7 +72,6 @@ console.log("Listening to port " + port + ".");
 
 app.route("/login")
     .get((req, res) => {
-        console.log("User entered login.")
         res.render("login")
     })  
     .post(async (req, res) => {
@@ -123,7 +122,6 @@ app.get('/logout', authSession, (req, res) => {
             console.error(err)
             return
         }
-        console.log(`Log out.`)
         res.redirect('/login');
     })
 })
@@ -136,7 +134,6 @@ app
         res.render("register");
     })
     .post(async (req, res) => {
-        console.log("Registering")
         let password = req.body.password
         let hashed = await bcrypt.hash(password, saltRounds)
         const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.contact_number, req.body.birthday.valueOf(), req.body.email, req.body.address, 1]
@@ -147,4 +144,10 @@ app
             res.render('register', { message: "Username is already taken."})
         }
         res.redirect('/login')
+    })
+
+app
+    .route("/delete")
+    .get(authSession,(req,res) => {
+        res.render("/delete")
     })

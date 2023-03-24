@@ -1,0 +1,99 @@
+<body>
+    <head>
+        <title>Profile Edit</title>
+        <link rel="stylesheet" href="/styles/style.css">
+    </head>
+    
+    <form id="edit-form" method="POST" action="edit" name="edit-form" autocomplete="off">
+    
+        <div class="section-box">
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="first_name">First Name:</label>
+                    <input class="textbox" id="first_name" type="text" name="first_name" value="<%= user.first_name %>">
+                </div>
+        
+                <div class="divider">
+                    <label for="last_name">Last Name:</label>
+                    <input class="textbox" id="last_name" type="text" name="last_name" value="<%= user.last_name %>">
+                </div>
+        
+            </div>
+    
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="sex">Sex:</label>
+                    <select class="textbox dropdown" name="sex" id="sex">
+                        <option value="male">Male</option>
+                        <option value="female" <% if(user.sex === 'female') { %>selected<% } %>>Female</option>
+                      </select>
+                </div>
+    
+                <div class="divider">
+                    <label for="age">Age:</label>
+                    <input class="textbox" id="age" type="number" name="age" value="<%= user.age %>">
+                </div>
+    
+                <div class="divider">
+                    <label for="birthday">Birthday:</label>
+                    <input class="textbox" type="date" id="birthday" name="birthday" value="<%= user.birthday %>">
+                </div>
+    
+            </div>
+            
+            <div class="input-group">
+                <label for="contact_number">Contact Number:</label>
+                <input class="textbox" id="contact_number" type="text" name="contact_number" value="<%= user.contact_number %>">
+            </div>
+    
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input class="textbox" id="email" type="text" name="email" value="<%= user.email %>">
+            </div>
+    
+            <div class="input-group ">
+                <label for="address">Full Address:</label>
+                <input class="textbox" id="address" type="text" name="address" value="<%= user.address %>">
+            </div>
+        </div>
+    
+        <div class="input-group section-box image-type">
+            <label for="image-type">ID Type:</label>
+            <input type="text" class="textbox" name="image-type" id="image-type">
+        </div>
+
+        <div class="input-group">
+        <h1>Front Image</h1>
+            <div class="section-box front-image">
+                <input type="file" name="front">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <h1>Back Image</h1>
+            <div class="section-box back-image">
+                <input type="file" name="back">
+            </div>
+        </div>
+    
+        <% if (locals.message) { %>
+            <span class="error message"><%= locals.message %> </span>
+        <% } %>
+
+        <div class="section-box">
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input class="textbox" id="password" type="password" name="password" required>
+            </div>
+        </div>
+
+    </form>
+    <div class="buttons">
+        <button type="submit" form="edit-form">Submit</button>
+        <form action="profile" method="get">
+            <button type="submit" >Back</button>
+        </form>
+    </div>
+
+    
+</body>

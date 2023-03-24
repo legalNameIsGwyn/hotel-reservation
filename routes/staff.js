@@ -36,7 +36,7 @@ router
     })
     .post(jsonParser, async (req, res) => {
         let username = await decrypt(req.body.text)
-        res.redirect(`/userdata/${username}`)
+        res.redirect(`userdata/${username}`)
     })
 
 router
@@ -44,7 +44,8 @@ router
     .get(async(req,res) => {
         let username = req.params.username;
         let user = await getUser(username, "users");
-
-        res.render('basicUserData', { user: user});
+        console.log(user)
+        res.render('staff/basicUserData', { user: user});
     })
+
 module.exports = router

@@ -38,29 +38,29 @@
     
                 <div class="divider">
                     <label for="age">Age:</label>
-                    <input class="textbox" id="age" type="number" name="age">
+                    <input class="textbox" id="age" type="number" name="age" value="<%= locals.age %>" >
                 </div>
 
                 <div class="divider">
                     <label for="birthday">Birthday:</label>
-                    <input class="textbox" type="date" id="birthday" name="birthday">
+                    <input class="textbox" type="date" id="birthday" name="birthday" value="<%= locals.birthday %>" >
                 </div>
     
             </div>
             
             <div class="input-group">
                 <label for="contact_number">Contact Number:</label>
-                <input class="textbox" id="contact_number" type="text" name="contact_number">
+                <input class="textbox" id="contact_number" type="text" name="contact_number" value="<%= locals.contact_number %>" >
             </div>
     
             <div class="input-group">
                 <label for="email">Email:</label>
-                <input class="textbox" id="email" type="text" name="email">
+                <input class="textbox" id="email" type="text" name="email" value="<%= locals.email%>" >
             </div>
     
             <div class="input-group ">
                 <label for="address">Full Address:</label>
-                <input class="textbox" id="address" type="text" name="address">
+                <input class="textbox" id="address" type="text" name="address" value="<%= locals.address %>" >
             </div>
         </div>
         <% if (locals.message) { %>
@@ -69,13 +69,13 @@
         <div class="section-box">
 
             <div class="input-group">
-                <label for="username">Username:</label>
+                <label for="username"<% if (locals.message) { %> autofocus <% } %>>Username:</label>
                 <input class="textbox" id="username" type="text" name="username" required>
             </div>
 
             <div class="input-group">
                 <label for="password">Password:</label>
-                <input class="textbox" id="password" type="password" name="password" required>
+                <input class="textbox" id="password" type="password" name="password" value="<%= locals.password %>" required>
             </div>
 
         </div>

@@ -137,6 +137,14 @@ body > * {
 #reader img:first-of-type {
     visibility: hidden !important;
 }
+#id-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#id-form input[type="file"] {
+    margin: 0;
+}
 @media only screen and (max-width: 750px) {
     .section-box{
         max-width: 100%;
