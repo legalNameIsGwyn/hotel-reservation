@@ -1,7 +1,7 @@
 const { render } = require('ejs')
 const express = require('express')
 const session = require('express-session')
-const MySQLStore = require('express-mysql-session')(session);
+
 const bcrypt = require('bcrypt');
 const https = require('https')
 const fs = require('fs')
@@ -10,6 +10,7 @@ const port = 3000
 const saltRounds = 10
 const userRouter = require('./routes/user')
 const staffRouter = require('./routes/staff')
+const { sessionStore } = require('./sql-connection')
 
 const {
     encrypt,
@@ -23,15 +24,6 @@ const {
     generateQR,
   } = require('./server-utils');
   
-const options = {    
-    host: 'localhost',
-    user: 'localuser',
-    password: 'password',
-    database: 'easytel',
-    connectionLimit: 10,
-}
-
-const sessionStore = new MySQLStore(options)
 
 app.use(session({
     secret: 'pinakamalupetnasikreto',
