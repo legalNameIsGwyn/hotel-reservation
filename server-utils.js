@@ -1,18 +1,9 @@
-const mysql2 = require('mysql2');
 const crypto = require('crypto');
 const fs = require('fs')
 const { secretKey } = require('./config');
 const qr = require('qrcode')
+const {connection} = require('./sql-connection')
 
-const options = {    
-    host: 'localhost',
-    user: 'localuser',
-    password: 'password',
-    database: 'easytel',
-    connectionLimit: 10,
-}
-
-const connection = mysql2.createPool(options)
 
 function encrypt(text) {
     const iv = crypto.randomBytes(16);
