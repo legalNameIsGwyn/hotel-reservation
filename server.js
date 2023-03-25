@@ -22,6 +22,7 @@ const {
     getReservations,
     authSession,
     generateQR,
+    updateUser
   } = require('./server-utils');
   
 

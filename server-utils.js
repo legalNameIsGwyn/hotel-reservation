@@ -7,7 +7,7 @@ const {connection} = require('./sql-connection')
 
 function encrypt(text) {
     const iv = crypto.randomBytes(16);
-    
+
     const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(secretKey), iv);
     let encrypted = cipher.update(text);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
@@ -84,7 +84,7 @@ async function getUser(username, table){
 async function addReservation(reservation) {
     try{
         await connection.execute(
-            'INSERT INTO reservations (username, checkin, checkout) VALUES (?, ?, ?)', reservation
+            'INSERT INTO reservations (username, checkin, checkout, adults, children) VALUES (?, ?, ?, ?, ?)', reservation
         )
         console.log('Reservation added.')
     } catch (error){

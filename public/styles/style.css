@@ -145,9 +145,14 @@ body > * {
 #id-form input[type="file"] {
     margin: 0;
 }
-@media only screen and (max-width: 750px) {
+/* @media only screen and (max-width: 750px) {
+    
     .section-box{
         max-width: 100%;
-        width: 90% !important;
+        width: 80% !important;
     }
-}
+    .buttons{
+        max-width: 100%;
+        width: 80%;
+    }
+} */

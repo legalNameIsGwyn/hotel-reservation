@@ -2,14 +2,17 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const {
+    encrypt,
+    decrypt,
+    userExists,
+    addUser,
     getUser,
     addReservation,
     getReservations,
     authSession,
     generateQR,
-    decrypt,
     updateUser
-    } = require('../server-utils');
+  } = require('../server-utils');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -36,10 +39,13 @@ router
         res.render('user/hotels')
     })
     .post(authSession,async (req, res) => {
-        let reservation = [req.session.username, req.body.checkin, req.body.checkout]
+        let username = req.session.username
+        let decryptedUsername = await decrypt(username)
+        console.log(decryptedUsername)
+        let reservation = [decryptedUsername, req.body.checkin, req.body.checkout, req.body.adults, req.body.children]
 
         addReservation(reservation)
-        res.redirect('user/dash')
+        res.redirect('dash')
     })
 
 // ================ RESERVATION =================

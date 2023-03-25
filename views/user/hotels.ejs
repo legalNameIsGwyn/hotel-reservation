@@ -8,13 +8,29 @@
     <title>Easytel Hotels</title>
 </head>
 <body>
-    <form id="reservation_form" method="POST" action="/hotels" name="reservation_form" autocomplete="on">
-        <div class="section-box">
-            <label for="checkin"><h2>When will you checkin?</h2></label>
-            <input class="textbox" type="date" id="checkin" name="checkin">
+    <form id="reservation_form" method="POST" action="hotels" name="reservation_form" autocomplete="on">
 
-            <label for="checkout"><h2>When will you checkout?</h2></label>
-            <input class="textbox" type="date" id="checkout" name="checkout">
+        <div class="section-box">
+            <div class="input-group">
+                <label for="checkin"><h2>When will you checkin?</h2></label>
+                <input class="textbox" type="date" id="checkin" name="checkin">
+            </div>
+
+            <div class="input-group">
+                <label for="checkout"><h2>When will you checkout?</h2></label>
+                <input class="textbox" type="date" id="checkout" name="checkout">
+            </div>
+
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="adults">Adults</label>
+                    <input class="textbox" type="number" name="adults" id="adults" value="1">
+                </div>
+                <div class="divider">
+                    <label for="children">Children</label>
+                    <input class="textbox" type="number" name="children" id="children" value="0">
+                </div>
+            </div>
         </div>
     </form>
 
