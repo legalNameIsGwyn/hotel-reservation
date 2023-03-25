@@ -7,19 +7,28 @@
 <h1>User Profile</h1>
 <div class="section-box" id="user-data">
     <label for="idType">ID Type</label>
-    <input type="text" id="idType" name="idType">
+    <input type="text" id="idType" name="idType" class="textbox">
 
-    <h1>Front</h1>
-    <input type="file" name="" id="">
-    <h1>Back</h1>
-</div>
+    <div class="uploadID">
+        <h1>Front</h1>
+        <label for="frontID">
+            <img src="/images/id.png"/>
+        </label>
+        <input type="file" name="frontID" id="frontID">
+        <h1>Back</h1>
+        <label for="backID">
+            <img src="/images/id.png"/>
+        </label>
+        <input type="file" name="backID" id="backID">
+    </div>
+    </div>
 
 <div class="buttons">
     <form action="dash" method="get">
         <button type="submit">Back</button>
     </form>
-    <form action="edit" method="get">
-        <button type="submit">Edit</button>
+    <form action="edit" method="post">
+        <button type="submit">Save</button>
     </form>
 </div>
 

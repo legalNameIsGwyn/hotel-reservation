@@ -145,6 +145,30 @@ body > * {
 #id-form input[type="file"] {
     margin: 0;
 }
+.uploadID{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.uploadID>input{
+    display: none;
+}
+
+.uploadID>label{
+    flex:1;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    max-width: fit-content;
+}
+
+.uploadID>label>img{
+    flex: 1;
+    max-width: 50%;
+    max-height: 50%;
+    object-fit: scale-down;
+}
 /* @media only screen and (max-width: 750px) {
     
     .section-box{

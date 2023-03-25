@@ -25,6 +25,7 @@ const {
     updateUser,
     checkPassword
   } = require('./server-utils');
+const exp = require('constants');
   
 
 app.use(session({
@@ -41,6 +42,7 @@ app.set('Views', [
 ])
 
 // serve file inside public
+app.use(express.static(__dirname+'/id/'))
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())

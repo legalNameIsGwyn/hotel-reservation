@@ -41,7 +41,6 @@ router
     .post(authSession,async (req, res) => {
         let username = req.session.username
         let decryptedUsername = await decrypt(username)
-        console.log(decryptedUsername)
         let reservation = [decryptedUsername, req.body.checkin, req.body.checkout, req.body.adults, req.body.children]
 
         addReservation(reservation)
@@ -121,6 +120,14 @@ router
         let user = await getUser(username, "users")
         let bookings = await getReservations(username)
         res.render('user/profile', {user: user, bookings: bookings})
+    })
+
+// ================= EDIT ==================
+
+router
+    .route('/editID')
+    .get(authSession, (req,res) => {
+        res.render('user/editID')
     })
 
 module.exports = router
