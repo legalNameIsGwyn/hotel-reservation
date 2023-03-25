@@ -52,8 +52,8 @@ router
 router
     .route('/reservations')
     .get(authSession, async (req,res) => {
-        let reservations = await getReservations(req.session.username)
-        res.send(reservations)
+        let bookings = await getReservations(await getUser(req.session.username).username)
+        res.render("user/reservations", {bookings: bookings})
 
     })
     .post(authSession, async (req, res) => {
@@ -75,8 +75,7 @@ router
     .get(authSession,async (req,res) => {
         let username = await decrypt(req.session.username)
         let user = await getUser(username, "users")
-        let bookings = await getReservations(username)
-        res.render('user/profile', {user : user, bookings : bookings})
+        res.render('user/profile', {user : user})
     })
 
 // ================= POINTS ==================

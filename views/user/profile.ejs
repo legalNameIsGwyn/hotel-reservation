@@ -23,27 +23,17 @@
 </div>
 
 <div class="buttons">
-    <form action="dash" method="get">
-        <button type="submit">Back</button>
-    </form>
+
     <form action="edit" method="get">
         <button type="submit">Edit</button>
     </form>
+    
+    <form action="dash" method="get">
+        <button type="submit">Back</button>
+    </form>
+
 </div>
-<h1>Bookings</h1>
-<div id="bookings">
-    <% if (bookings.length > 0) { %>
-    <div class="booking-row">
-        <% bookings.forEach(function(booking) { %>
-        <p class="section-box"><strong>Booking ID:</strong> <%= booking.id %><br>
-            <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %></p>
-        <% }); %>
-        
-    </div>
-    <% } else { %>
-    <p>No bookings found.</p>
-    <% } %>
-</div>
+
 <a href="/delete">Delete Account</a>
 
 
