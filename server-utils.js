@@ -129,9 +129,30 @@ const generateQR = async text => {
     }
 }
 
-function uploadImage(username) {
-    const imageBuffer = fs.readFileSync()
+function uploadImages(userID, hasID) {
+    try {
+        let query;
+        if (hasID == 0) {
+            query = 'INSERT INTO userid (username, frontimage, backimage, imagetype) VALUES (?,?,?,?)';
+            console.log("new user")
+
+        } else if (hasID == 1) {
+            userID.shift()
+            query = 'UPDATE userid SET frontimage = ?, backimage = ?, imagetype = ? WHERE username = ?';
+
+        }
+        
+        connection.query(query, userID)
+    
+        if (hasID == 0) {
+            let hasIDupdate = 'UPDATE users SET hasID = 1 WHERE username = ?';
+            connection.query(hasIDupdate, userID[0]);
+        }
+    } catch {
+      console.log('\nError in uploadImages\n');
+    }
 }
+  
 
 async function updateUser(userData){
 
@@ -148,4 +169,4 @@ async function updateUser(userData){
     }
 }
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations,  checkPassword,authSession, generateQR, updateUser };
+module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations,  checkPassword,authSession, generateQR, updateUser, uploadImages };

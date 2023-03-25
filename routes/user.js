@@ -1,6 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
+
+const upload = multer({ storage: multer.memoryStorage() });
+
 const {
     encrypt,
     decrypt,
@@ -11,7 +16,8 @@ const {
     getReservations,
     authSession,
     generateQR,
-    updateUser
+    updateUser,
+    uploadImages
   } = require('../server-utils');
 
 const storage = multer.diskStorage({
@@ -102,7 +108,7 @@ router
         if(userData.password != userData.password2){
             res.render('user/edit', {message: "Passwords don't match."})
         }
-        let password = encrypt(userData.password)
+        let password = await bcrypt.hash(userData.password, saltRounds )
 
         let data = [
             password, 
@@ -122,12 +128,18 @@ router
         res.render('user/profile', {user: user, bookings: bookings})
     })
 
-// ================= EDIT ==================
+// ================ EDIT ID ==================
 
 router
     .route('/editID')
-    .get(authSession, (req,res) => {
+    .get(authSession,  (req,res) => {
         res.render('user/editID')
+    })
+    .post(authSession, upload.fields([
+        { name: 'frontID', maxCount: 1 },
+        { name: 'backID', maxCount: 1 }]),
+    async (req,res) => {
+        
     })
 
 module.exports = router

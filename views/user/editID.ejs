@@ -1,37 +1,49 @@
 <head>
     <title>Easytel User ID</title>
     <link rel="stylesheet" href="/styles/style.css">
+
 </head>
 
-<link rel="stylesheet" href="/styles/style.css">
-<h1>User Profile</h1>
-<div class="section-box" id="user-data">
-    <label for="idType">ID Type</label>
-    <input type="text" id="idType" name="idType" class="textbox">
+<body>
+    <h1>User Profile</h1>
 
-    <div class="uploadID">
+    <form action="editID" method="POST" class="uploadID">
+        <div class="idType section-box">
+            <label for="idType">ID Type</label>
+            <input type="text" id="idType" name="idType" class="textbox" required>
+        </div>
+
         <h1>Front</h1>
-        <label for="frontID">
-            <img src="/images/id.png"/>
-        </label>
-        <input type="file" name="frontID" id="frontID">
+        <div class="image-group section-box">
+
+            <label for="frontID">
+                <img src="/images/id.png" id="frontImage">
+            </label>
+            <input type="file" name="frontID" id="frontID" required>
+        </div>
+
         <h1>Back</h1>
-        <label for="backID">
-            <img src="/images/id.png"/>
-        </label>
-        <input type="file" name="backID" id="backID">
-    </div>
+        <div class="image-group section-box">
+
+            <label for="backID">
+                <img src="/images/id.png" id="backImage">
+            </label>
+            <input type="file" name="backID" id="backID" required>
+        </div>
+
+    </form>
+
+    <div class="buttons">
+        <form action="dash" method="get">
+            <button type="submit">Back</button>
+        </form>
+        <form action="editID" method="post">
+            <button type="submit">Save</button>
+        </form>
     </div>
 
-<div class="buttons">
-    <form action="dash" method="get">
-        <button type="submit">Back</button>
-    </form>
-    <form action="edit" method="post">
-        <button type="submit">Save</button>
-    </form>
-</div>
-
+    <script src="/scripts/addid.js"></script>
+</body>
 
 
 
