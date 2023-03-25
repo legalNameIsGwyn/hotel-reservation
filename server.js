@@ -22,7 +22,8 @@ const {
     getReservations,
     authSession,
     generateQR,
-    updateUser
+    updateUser,
+    checkPassword
   } = require('./server-utils');
   
 
@@ -79,7 +80,7 @@ app.route("/login")
         } else if (userInUSERS) {
             let user = await getUser(username, "users")
 
-            if (!await bcrypt.compare(password, user.password)){
+            if (!await checkPassword(password, username, "users")){
                 res.render('login', { 
                     message: "Incorrect password.", 
                     username : username})
@@ -87,8 +88,10 @@ app.route("/login")
             
             let encryptedUsername = encrypt(user.username);
             req.session.username = encryptedUsername
+            req.session.table = "users"
             res.redirect(`user/dash`)
         } else if (userInADMIN) {
+
             let user = await getUser(username, "admins")
             if(password != user.password){
                 res.render('login', { 
@@ -97,12 +100,12 @@ app.route("/login")
             }
             let encryptedUsername = encrypt(user.username);
             req.session.username = encryptedUsername
+            req.session.table = "admins"
             res.redirect(`staff/dash`)
         } 
 
         }catch(e) {
             console.log("\nError in login.")
-            console.error(e)
             res.render('login')
         } 
     })

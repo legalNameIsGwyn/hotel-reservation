@@ -86,63 +86,42 @@ router
     .get(authSession, (req,res) => {
         res.render('user/points')
     })
-
+    
+// ================= EDIT ==================
 router
     .route('/edit')
     .get(authSession, async (req, res) => {
+        let sessionUser = await decrypt(req.session.username)
+        let table = req.session.table
+        let user = await getUser(sessionUser, table)
+        console.log(user)
+        res.render('user/edit',{ user: user})
+    })
+    .post(authSession, async (req, res) => {
         const userData = req.body;
-      
-        // Save user data to users table
-        saveUserDataToUsersTable(userData, (err, result) => {
-            const user = {
-                first_name: userData.first_name,
-                last_name: userData.last_name,
-                sex: userData.sex,
-                age: userData.age,
-                birthday: userData.birthday,
-                contact_number: userData.contact_number,
-                email: userData.email,
-                address: userData.address
-            };
+        let username = await decrypt(req.session.username)
 
-          if (err) {
-            console.error(err);
-            res.status(500).send('Error saving user data to users table');
-            return;
-          }
-      
-          // Check if image files were uploaded
-          if (req.files) {
-            // Save image data to user ID table
-            const userId = result.insertId;
-            saveImageDataToUserIdTable(userId, req.files, (err) => {
-              if (err) {
-                console.error(err);
-                res.status(500).send('Error saving image data to user ID table');
-                return;
-              }
-      
-              res.status(200).send('Data saved successfully!');
-            });
-          } else {
-            // If no files were uploaded, send success response
-            res.status(200).send('Data saved successfully!');
-          }
-        });
-      });
+        if(userData.password != userData.password2){
+            res.render('user/edit', {message: "Passwords don't match."})
+        }
+        let password = encrypt(userData.password)
 
-// save user data to users table
-function saveUserDataToUsersTable(userData, callback) {
-    // save user data to users table
-    // ...
-    callback(null, { insertId: 1 }); // simulate successful database insertion
-}
+        let data = [
+            password, 
+            userData.first_name, 
+            userData.last_name, 
+            userData.sex, 
+            userData.age, 
+            userData.contact_number, 
+            userData.birthday, 
+            userData.email, 
+            userData.address,
+            username];
 
-// save image data to user ID table
-function saveImageDataToUserIdTable(userId, files, callback) {
-    // save image data to user ID table
-    // ...
-    callback(null); // simulate successful database insertion
-}
+        updateUser(data)
+        let user = await getUser(username, "users")
+        let bookings = await getReservations(username)
+        res.render('user/profile', {user: user, bookings: bookings})
+    })
 
 module.exports = router

@@ -3,6 +3,7 @@ const fs = require('fs')
 const { secretKey } = require('./config');
 const qr = require('qrcode')
 const {connection} = require('./sql-connection')
+const bcrypt = require('bcrypt')
 
 
 function encrypt(text) {
@@ -103,6 +104,10 @@ async function getReservations(username) {
         console.log('\nERROR IN getReservations\n')
     }
 }
+async function checkPassword(password, username, table){
+    let user = await getUser(username, table)
+    return await bcrypt.compare(password, user.password)
+}
 
 function authSession(req, res, next){
     if (req.session && req.session.username) {
@@ -128,8 +133,19 @@ function uploadImage(username) {
     const imageBuffer = fs.readFileSync()
 }
 
-async function updateUser(data, username){
+async function updateUser(userData){
 
+    try{
+
+        const query = 'UPDATE users SET password = ?,first_name = ?,last_name = ?,sex = ?,age = ?,contact_number = ?,birthday = ?,email = ?,address = ? WHERE username = ?';
+          
+        await connection.promise().query(query, userData);
+
+
+    } catch(e) {
+        console.log('Error in updateUser\n')
+        console.log(e)
+    }
 }
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, authSession, generateQR, updateUser };
+module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations,  checkPassword,authSession, generateQR, updateUser };

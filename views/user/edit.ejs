@@ -57,25 +57,7 @@
             </div>
         </div>
     
-        <div class="input-group section-box image-type">
-            <label for="image-type">ID Type:</label>
-            <input type="text" class="textbox" name="image-type" id="image-type">
-        </div>
 
-        <div class="input-group">
-        <h1>Front Image</h1>
-            <div class="section-box front-image">
-                <input type="file" name="front">
-            </div>
-        </div>
-
-        <div class="input-group">
-            <h1>Back Image</h1>
-            <div class="section-box back-image">
-                <input type="file" name="back">
-            </div>
-        </div>
-    
         <% if (locals.message) { %>
             <span class="error message"><%= locals.message %> </span>
         <% } %>
@@ -84,6 +66,12 @@
             <div class="input-group">
                 <label for="password">Password:</label>
                 <input class="textbox" id="password" type="password" name="password" required>
+            </div>
+            <div class="input-group">
+
+                <label for="password2">Verify Password:</label>
+                <input class="textbox" id="password2" type="password" name="password2" required>
+
             </div>
         </div>
 

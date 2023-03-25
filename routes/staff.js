@@ -44,7 +44,6 @@ router
     .get(async(req,res) => {
         let username = req.params.username;
         let user = await getUser(username, "users");
-        console.log(user)
         res.render('staff/basicUserData', { user: user});
     })
 
