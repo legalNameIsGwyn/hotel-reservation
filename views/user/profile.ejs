@@ -29,9 +29,14 @@
 </div>
 
 <h1>ID</h1>
-<div class="front-id-box section-box">
-    
-</div>
+<% if (user.hasID == 0) {%>
+    <div class="section-box">No ID's Found.</div>
+<% } else if (user.hasID == 1) {%>
+    <div class="section-box">
+        <img src="data:image/jpeg;base64,<%= frontImage %>">
+        <img src="data:image/jpeg;base64,<%= backImage %>">
+    </div>
+<% } %>
 <form action="editID">
     <button type="submit">Edit ID</button>
 </form>

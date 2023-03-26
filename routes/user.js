@@ -6,17 +6,6 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/');
-//     },
-//     filename: async (req, file, cb) => {
-//         let username = await decrypt(req.session.username)
-//         let filename = username + '-' + Date.now() + path.extname(file.originalname)
-//         cb(null,filename);
-//     }
-// });
-
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage });
 
@@ -31,7 +20,8 @@ const {
     authSession,
     generateQR,
     updateUser,
-    uploadImages
+    uploadImages,
+    getUserImages
   } = require('../server-utils');
 const { render } = require('ejs')
 
@@ -87,7 +77,14 @@ router
     .get(authSession,async (req,res) => {
         let username = await decrypt(req.session.username)
         let user = await getUser(username, "users")
-        res.render('user/profile', {user : user})
+
+        if (user.hasID == 1){
+            let imageArray = await getUserImages(username)
+            console.log(imageArray)
+            // res.render('user/profile', {user : user, frontImage : imageArray[0], backImage : imageArray[1]})
+
+        }
+        // res.render('user/profile', {user : user})
     })
 
 // ================= POINTS ==================
@@ -148,15 +145,15 @@ router
         async (req,res) => {
         let idType = req.body.idType
 
-        const frontImage = req.files['frontID'][0].buffer;
-        const backImage = req.files['backID'][0].buffer;
+        const frontImage = req.files['frontID'][0].buffer.toString('base64');
+        const backImage = req.files['backID'][0].buffer.toString('base64');
 
         let username = await decrypt(req.session.username)
         let user = await getUser(username, "users")
         let hasID = user.hasID
 
         await uploadImages(username, hasID, frontImage, backImage, idType);
-        res.render('user/profile', { user: user })
+        res.render('user/profile', { user: user, frontImage : frontImage, backImage : backImage })
     })
 
 module.exports = router

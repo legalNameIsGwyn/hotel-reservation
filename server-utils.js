@@ -148,7 +148,28 @@ async function uploadImages(username, hasID, frontImage, backImage, idType) {
     } catch (error) {
       console.log(`\nError in uploadImages for user ${username}:\n `, error);
     }
-  }
+}
+  
+async function getUserImages(username) {
+    console.log(username)
+    try {
+        const query = 'SELECT frontimage, backimage FROM userid WHERE username = ?';
+        let [rows, fields] = await connection.execute(query, [username]);
+
+        if (rows.length > 0) {
+            const frontImage = rows[0].frontimage.toString('base64');
+            const backImage = rows[0].backimage.toString('base64');
+            console.log(frontImage)
+            return [frontImage, backImage];
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.log(`\nError in getUserImages for user ${username}:\n `, error);
+          return null;
+        }
+
+    }
   
   
 
@@ -167,4 +188,4 @@ async function updateUser(userData){
     }
 }
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations,  checkPassword,authSession, generateQR, updateUser, uploadImages };
+module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations,  checkPassword,authSession, generateQR, updateUser, uploadImages, getUserImages };
