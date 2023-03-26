@@ -129,29 +129,27 @@ const generateQR = async text => {
     }
 }
 
-function uploadImages(userID, hasID) {
+async function uploadImages(username, hasID, frontImage, backImage, idType) {
+
     try {
-        let query;
-        if (hasID == 0) {
-            query = 'INSERT INTO userid (username, frontimage, backimage, imagetype) VALUES (?,?,?,?)';
-            console.log("new user")
-
-        } else if (hasID == 1) {
-            userID.shift()
-            query = 'UPDATE userid SET frontimage = ?, backimage = ?, imagetype = ? WHERE username = ?';
-
-        }
+      let query;
+      if (hasID == 0) {
+        query = 'INSERT INTO userid (username, frontimage, backimage, imagetype) VALUES (?,?,?,?)';
+        await connection.execute(query, [username, frontImage, backImage, idType]);
+  
+        let hasIDupdate = 'UPDATE users SET hasID = 1 WHERE username = ?';
+        await connection.execute(hasIDupdate, [username]);
         
-        connection.query(query, userID)
-    
-        if (hasID == 0) {
-            let hasIDupdate = 'UPDATE users SET hasID = 1 WHERE username = ?';
-            connection.query(hasIDupdate, userID[0]);
-        }
-    } catch {
-      console.log('\nError in uploadImages\n');
+      } else if (hasID == 1) {
+        query = 'UPDATE userid SET frontimage = ?, backimage = ?, imagetype = ? WHERE username = ?';
+        await connection.execute(query, [frontImage, backImage, idType, username]);
+
+      }
+    } catch (error) {
+      console.log(`\nError in uploadImages for user ${username}:\n `, error);
     }
-}
+  }
+  
   
 
 async function updateUser(userData){

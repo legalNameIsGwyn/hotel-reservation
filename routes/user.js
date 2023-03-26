@@ -1,10 +1,24 @@
 const express = require('express')
 const router = express.Router()
-const multer = require('multer')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
+const multer = require('multer')
+const path = require('path')
+const fs = require('fs')
 
-const upload = multer({ storage: multer.memoryStorage() });
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'uploads/');
+//     },
+//     filename: async (req, file, cb) => {
+//         let username = await decrypt(req.session.username)
+//         let filename = username + '-' + Date.now() + path.extname(file.originalname)
+//         cb(null,filename);
+//     }
+// });
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage });
 
 const {
     encrypt,
@@ -19,22 +33,15 @@ const {
     updateUser,
     uploadImages
   } = require('../server-utils');
+const { render } = require('ejs')
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
 router
     .route('/dash')
     .get(authSession, (req, res) => {
         res.render('user/userDash')
     })
     .post(authSession, (req, res) => {
-        
+        res.send("why are you here?")
     })
 
 // ================ HOTELS =================
@@ -136,10 +143,20 @@ router
         res.render('user/editID')
     })
     .post(authSession, upload.fields([
-        { name: 'frontID', maxCount: 1 },
-        { name: 'backID', maxCount: 1 }]),
-    async (req,res) => {
-        
+        { name: 'frontID' },
+        { name: 'backID'}]),
+        async (req,res) => {
+        let idType = req.body.idType
+
+        const frontImage = req.files['frontID'][0].buffer;
+        const backImage = req.files['backID'][0].buffer;
+
+        let username = await decrypt(req.session.username)
+        let user = await getUser(username, "users")
+        let hasID = user.hasID
+
+        await uploadImages(username, hasID, frontImage, backImage, idType);
+        res.render('user/profile', { user: user })
     })
 
 module.exports = router

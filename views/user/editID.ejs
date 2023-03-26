@@ -7,10 +7,10 @@
 <body>
     <h1>User Profile</h1>
 
-    <form action="editID" method="POST" class="uploadID">
+    <form id="userID-form" name="userID-form" action="editID" method="POST" class="uploadID" enctype="multipart/form-data">
         <div class="idType section-box">
             <label for="idType">ID Type</label>
-            <input type="text" id="idType" name="idType" class="textbox" required>
+            <input type="text" id="idType" name="idType" class="textbox">
         </div>
 
         <h1>Front</h1>
@@ -19,8 +19,8 @@
             <label for="frontID">
                 <img src="/images/id.png" id="frontImage">
             </label>
-            <input type="file" name="frontID" id="frontID" required>
-        </div>
+            <input type="file" name="frontID" id="frontID" accept='image/*' required>
+        </div>   
 
         <h1>Back</h1>
         <div class="image-group section-box">
@@ -28,7 +28,7 @@
             <label for="backID">
                 <img src="/images/id.png" id="backImage">
             </label>
-            <input type="file" name="backID" id="backID" required>
+            <input type="file" name="backID" id="backID" accept='image/*'>
         </div>
 
     </form>
@@ -37,9 +37,7 @@
         <form action="dash" method="get">
             <button type="submit">Back</button>
         </form>
-        <form action="editID" method="post">
-            <button type="submit">Save</button>
-        </form>
+        <input type="submit" name="save-id-button" form="userID-form">
     </div>
 
     <script src="/scripts/addid.js"></script>
