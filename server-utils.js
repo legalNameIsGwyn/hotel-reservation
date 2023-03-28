@@ -6,6 +6,7 @@ const {connection} = require('./sql-connection')
 const bcrypt = require('bcrypt')
 const path = require('path')
 const multer = require('multer');
+const e = require('express');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -140,7 +141,11 @@ async function checkPassword(password, username, table){
 }
 
 async function deleteAccount(username) {
-    await connection.execute('UPDATE users SET active = 0 WHERE username = ?', username)
+    try{
+        await connection.promise().query("UPDATE users SET active = 0 WHERE username = ?", username)
+    } catch(e) {
+        console.error(e)
+    }
 }
 
 function authSession(req, res, next){

@@ -69,7 +69,6 @@ app.route("/login")
             res.render('login', { message: "User does not exist."})
         } else if (userInUSERS) {
             let user = await getUser(username, "users")
-            console.log(user)
             if(user.active == 0){
                 res.render('login', { message: "User does not exist."})
             }

@@ -16,6 +16,7 @@ router
     .post(authSession, (req, res) => {
         res.send("why are you here?")
     })
+
 router
     .route('/delete')
     .get(authSession, (req, res) => {
@@ -23,10 +24,11 @@ router
     })
     .post(authSession, async (req, res) => {
         let username = await decrypt(req.session.username)
-        let passCheck = checkPassword(req.body.password, username, req.session.table)
+        let passCheck = await checkPassword(req.body.password, username, req.session.table)
 
         if(passCheck){
             await deleteAccount(username)
+            res.render('login')
         } else if (!passCheck) {
             res.render('user/delete', {message : "Invalid password."})
         }
