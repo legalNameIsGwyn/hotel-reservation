@@ -115,20 +115,25 @@ router
         { name: 'frontID' }, 
         { name: 'backID' }]), 
         async (req,res) => {
-            
+
         let username = await decrypt(req.session.username)
+        let user = await getUser(username, req.session.table)
         let idType = req.body.idType
-        const frontid = req.files[0].filename;
-        const backid = req.files[1].filename;
+        const frontid = req.files['frontID'][0].filename;
+        const backid = req.files['backID'][0].filename;
+
+        let frontFilepath = `/uploads/${frontid}`;
+        let backFilepath = `/uploads/${backid}`;
 
         let userid = [username, frontid, backid, idType]
         console.log(userid)
-        // uploadIdName(userid)
-        // res.render('user/userDash')
-        // res.render('user/profile', {
-        //     user: user, 
-        //     frontFilepath: frontFilepath, 
-        //     backFilepath: backFilepath})
+        uploadUserid(userid)
+        setHasID(username)
+
+        res.render('user/profile', {
+            user: user, 
+            frontFilepath: frontFilepath, 
+            backFilepath: backFilepath})
     })
 
 module.exports = router

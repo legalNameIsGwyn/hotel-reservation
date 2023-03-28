@@ -33,8 +33,8 @@
     <div class="section-box">No ID's Found.</div>
 <% } else if (user.hasID == 1) {%>
     <div class="section-box">
-        <img src="{{frontFilepath}}" alt="Front ID">
-        <img src="{{frontFilepath}}" alt="Back ID">
+        <img src="<%= frontFilePath %>" alt="Front ID">
+        <img src="<%= backFilePath %>" alt="Back ID">
     </div>
 <% } %>
 <form action="editID">

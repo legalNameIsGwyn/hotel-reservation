@@ -155,10 +155,9 @@ const generateQR = async text => {
 }
 
 async function uploadUserid(userid) {
-    console.log(`Uploading to userid: 
-    ${userid[0]}\n${userid[1]}\n${userid[3]}`)
+    console.log(`Uploading to userid:\n${userid[0]}\n${userid[1]}\n${userid[3]}`)
     try {
-        await connection.execute('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)',[userid])
+        await connection.execute('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)', userid)
     } catch (error) {
       console.log(`\nError in uploadImages for user ${username}:\n `, error);
     }
