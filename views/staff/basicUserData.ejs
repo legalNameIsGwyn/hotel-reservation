@@ -20,14 +20,65 @@
         <p><strong>Birthday:</strong> <%= user.birthday %></p>
         <p><strong>Email:</strong> <%= user.email %></p>
         <p><strong>Address:</strong> <%= user.address %></p>
-        <p><strong>Active:</strong> <%= user.active.toString('hex') %></p>
+        <p><strong>Active:</strong> <%= user.active %></p>
     </div>
     <div>
         
     </div>
-    <form action="adminDash" method="get">
-        <button type="submit">Back</button>
+
+    <form id="reservation_form" method="POST" action="userdata/" name="reservation_form" autocomplete="on">
+
+        <div class="section-box">
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="checkin"><h3>Check-in</h3></label>
+                    <input class="textbox" type="date" id="checkin" name="checkin">
+                </div>
+                <div class="divider">
+                    <label for="checkout"><h3>Check-out</h3></label>
+                    <input class="textbox" type="date" id="checkout" name="checkout">
+                </div>
+            </div>
+
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="adults">Adults</label>
+                    <input class="textbox" type="number" name="adults" id="adults" value="1">
+                </div>
+                <div class="divider">
+                    <label for="children">Children</label>
+                    <input class="textbox" type="number" name="children" id="children" value="0">
+                </div>
+                <div class="divider">
+                    <label for="room">Room</label>
+                    <input class="textbox" type="number" name="room" id="room" value="0">
+                </div>
+            </div>
+        </div>
     </form>
+
+    <div class="buttons">
+        <input value="Save" class="submit" id="reservation_button" name="reservation_button" type="submit" form="reservation_form">
+
+        <form action="dash" method="get">
+            <button type="submit">Back</button>
+        </form>
+    
+    </div>
+    <h1>Bookings</h1>
+    <div id="bookings">
+        <% if (bookings.length > 0) { %>
+        <div class="section-box booking-row">
+            <% bookings.forEach(function(booking) { %>
+            <p><strong>Booking ID:</strong> <%= booking.id %><br>
+                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %><br><strong>Status: </strong><%= booking.bookingstatus %></p>
+            <% }); %>
+            
+        </div>
+        <% } else { %>
+        <p>No bookings found.</p>
+        <% } %>
+    </div>
 </body>
 </html>
 

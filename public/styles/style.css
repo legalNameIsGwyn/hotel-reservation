@@ -18,7 +18,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    align-content: center;
     padding: 5px;
 }
 
@@ -30,7 +30,7 @@ body > * {
 /* default section behaviour */
 .section-box{
     
-    width: 300px;
+    width: 350px;
     min-height: auto;
     margin-bottom: 30px;
     padding: 15px;
@@ -180,7 +180,7 @@ body > * {
     
     .section-box{
         max-width: 100%;
-        width: 80% !important;
+        width: 88% !important;
     }
     .buttons{
         max-width: 100%;

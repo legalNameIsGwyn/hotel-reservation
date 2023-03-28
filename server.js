@@ -12,7 +12,7 @@ const userRouter = require('./routes/user')
 const staffRouter = require('./routes/staff')
 const { sessionStore } = require('./sql-connection')
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, upload 
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, upload 
   } = require('./server-utils');
 const exp = require('constants');
   

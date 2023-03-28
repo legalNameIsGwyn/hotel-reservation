@@ -93,7 +93,7 @@ async function getUser(username, table){
     try {
         if(table == "users"){
             let [rows, fields] = await connection.promise().query(
-                'SELECT username, password, first_name, last_name, sex, age, contact_number, DATE_FORMAT(birthday, "%Y-%m-%d") as birthday, address, active, hasID FROM users WHERE username = ?', [username]
+                'SELECT username, password, first_name, last_name, sex, age, contact_number, DATE_FORMAT(birthday, "%W, %Y-%m-%d") as birthday, address, active, hasID FROM users WHERE username = ?', [username]
             );
             return rows[0];
         } else if (table == "admins") {
@@ -112,7 +112,7 @@ async function getUser(username, table){
 async function addReservation(reservation) {
     try{
         await connection.execute(
-            'INSERT INTO reservations (username, checkin, checkout, adults, children) VALUES (?, ?, ?, ?, ?)', reservation
+            'INSERT INTO reservations (username, checkin, checkout, bookingstatus, adults, children) VALUES (?, ?, ?, ?, ?, ?)', reservation
         )
         console.log('Reservation added.')
     } catch (error){
@@ -123,7 +123,7 @@ async function addReservation(reservation) {
 async function getReservations(username) {
     try{
         let [rows, fields] = await connection.promise().query(
-            'SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, adults, children FROM reservations WHERE username = ? ORDER BY id DESC', [username]
+            'SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, adults, children FROM reservations WHERE username = ? ORDER BY id DESC', [username]
         )
                 rows = rows.map(row => {
             row.check_in = new Date(row.check_in).toLocaleDateString();
@@ -211,5 +211,44 @@ async function updateUser(userData){
     }
 }
 
+async function updateBookingStatus(username, bookingID, status) {
+    await connection.promise().query("UPDATE reservations SET bookingstatus = ? WHERE username = ? AND id = ?", [status, username, bookingID])
+}
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, upload };
+async function getUnfinishedBookings(username){
+    try{
+        let [rows, fields] = await connection.promise().query('SELECT id, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, adults, children FROM reservations WHERE username = ? AND checkin >= CURDATE() ORDER BY id DESC', [username])
+        return rows;
+    } catch(e){
+        console.log("error in getUnfinishedBookings")
+    }
+}
+
+async function hasCurrentUser(){
+    const [rows] = await connection.promise().query('SELECT * FROM currentuser')
+
+    return rows.length > 0
+}
+
+async function setCurrentUser(username){
+    let hasCurrentUser = await hasCurrentUser()
+    try{
+        let query
+        if(hasCurrentUser){
+            query = "UPDATE currentuser SET username = ?"
+        } else if (!hasCurrentUser){
+            query = "INSERT INTO currentuser (username) VALUES (?)"
+        }
+
+        await connection.execute(query, username)
+    } catch(e) {
+        console.log("Error in setCurrentUser", e)
+    }
+}
+
+async function getCurrentUser(){
+    return await connection.promise().query("SELECT * FROM currentuser")
+}
+
+
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, setCurrentUser, getCurrentUser, upload };

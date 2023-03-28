@@ -10,7 +10,7 @@
         <div class="booking-row">
             <% bookings.forEach(function(booking) { %>
             <p class="section-box"><strong>Booking ID:</strong> <%= booking.id %><br>
-                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %></p>
+                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %><br><strong>Status: </strong><%= booking.bookingstatus %></p>
             <% }); %>
             
         </div>

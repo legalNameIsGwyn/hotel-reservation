@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 const path = require('path')
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, upload  
+const {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, upload 
   } = require('../server-utils');
 const { render } = require('ejs')
 
@@ -41,7 +41,7 @@ router
     })
     .post(authSession,async (req, res) => {
         let username = await decrypt(req.session.username)
-        let reservation = [username, req.body.checkin, req.body.checkout, req.body.adults, req.body.children]
+        let reservation = [username, req.body.checkin, req.body.checkout, "confirmed", req.body.adults, req.body.children]
 
         addReservation(reservation)
         res.redirect('dash')
