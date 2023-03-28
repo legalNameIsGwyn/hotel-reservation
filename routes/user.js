@@ -58,16 +58,16 @@ router
 
         if (user.hasID == 1){
             let idName = await getUserid(username)
-            console.log(idName)
-            let frontid = idName[1]
-            let backid = idName[2]
+            let frontid = idName[0].frontid
+            let backid = idName[0].backid
 
-            let frontFilepath = `/uploads/${frontid}`;
-            let backFilepath = `/uploads/${backid}`;
-
-            res.render('user/profile', {user: user, frontFilepath: frontFilepath, backFilepath :backFilepath})
+            let frontFilePath = `/uploads/${frontid}`;
+            let backFilePath = `/uploads/${backid}`;
+            res.render('user/profile', {user: user, frontFilePath : frontFilePath, backFilePath : backFilePath})
+        } else {
+            res.render('user/profile', {user : user})
         }
-        res.render('user/profile', {user : user})
+        
     })
 
 router

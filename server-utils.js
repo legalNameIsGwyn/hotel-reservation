@@ -171,10 +171,9 @@ async function uploadUserid(userid, hasID) {
 }
   
 async function getUserid(username) {
-    console.log(`Getting user idName: ${username}`)
     try {
         let [rows, fields] = await connection.promise().query('SELECT * FROM userid WHERE username = ?', [username])
-
+        
         return rows
         } catch (error) {
           console.log(`\nError in getUserImages for user ${username}:\n `, error);

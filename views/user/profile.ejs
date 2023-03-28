@@ -1,6 +1,7 @@
 <head>
     <title>Easytel User</title>
     <link rel="stylesheet" href="/styles/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <link rel="stylesheet" href="/styles/style.css">
@@ -32,9 +33,13 @@
 <% if (user.hasID == 0) {%>
     <div class="section-box">No ID's Found.</div>
 <% } else if (user.hasID == 1) {%>
-    <div class="section-box">
-        <img src="<%= frontFilePath %>" alt="Front ID">
-        <img src="<%= backFilePath %>" alt="Back ID">
+    <div class="section-box id-box">
+
+        <img src="<%= locals.frontFilePath %>" alt="Front ID">
+    </div>
+    <div class="section-box id-box">
+
+        <img src="<%= locals.backFilePath %>" alt="Back ID">
     </div>
 <% } %>
 <form action="editID">
