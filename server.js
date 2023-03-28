@@ -12,18 +12,7 @@ const userRouter = require('./routes/user')
 const staffRouter = require('./routes/staff')
 const { sessionStore } = require('./sql-connection')
 
-const {
-    encrypt,
-    decrypt,
-    userExists,
-    addUser,
-    getUser,
-    addReservation,
-    getReservations,
-    authSession,
-    generateQR,
-    updateUser,
-    checkPassword
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, setHasID, upload 
   } = require('./server-utils');
 const exp = require('constants');
   
@@ -44,6 +33,7 @@ app.set('Views', [
 // serve file inside public
 app.use(express.static(__dirname+'/id/'))
 app.use(express.static("public"))
+app.use('/uploads',express.static("uploads"))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
@@ -108,6 +98,7 @@ app.route("/login")
 
         }catch(e) {
             console.log("\nError in login.")
+            console.error(e)
             res.render('login')
         } 
     })

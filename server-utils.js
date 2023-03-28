@@ -4,6 +4,32 @@ const { secretKey } = require('./config');
 const qr = require('qrcode')
 const {connection} = require('./sql-connection')
 const bcrypt = require('bcrypt')
+const path = require('path')
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: async function (req, file, cb) {
+        let username = await decrypt(req.session.username)
+        let extension = path.extname(file.originalname)
+        let filename = username
+
+        if (file.fieldname === 'frontID') {
+            filename += '-front-'
+        } else if (file.fieldname === 'backID') {
+            filename += '-back-' 
+        }
+        
+        filename +=  Date.now() + extension
+        console.log(filename)
+        console.log("done uploading")
+        cb(null, filename)
+    }
+});
+
+const upload = multer({ storage: storage });
 
 
 function encrypt(text) {
@@ -92,7 +118,6 @@ async function addReservation(reservation) {
         console.log('\nERROR IN addReservation\n')
     }
 }
-
 // returns ALL reservations
 async function getReservations(username) {
     try{
@@ -129,48 +154,28 @@ const generateQR = async text => {
     }
 }
 
-async function uploadImages(username, hasID, frontImage, backImage, idType) {
-
+async function uploadUserid(userid) {
+    console.log(`Uploading to userid: 
+    ${userid[0]}\n${userid[1]}\n${userid[3]}`)
     try {
-      let query;
-      if (hasID == 0) {
-        query = 'INSERT INTO userid (username, frontimage, backimage, imagetype) VALUES (?,?,?,?)';
-        await connection.execute(query, [username, frontImage, backImage, idType]);
-  
-        let hasIDupdate = 'UPDATE users SET hasID = 1 WHERE username = ?';
-        await connection.execute(hasIDupdate, [username]);
-        
-      } else if (hasID == 1) {
-        query = 'UPDATE userid SET frontimage = ?, backimage = ?, imagetype = ? WHERE username = ?';
-        await connection.execute(query, [frontImage, backImage, idType, username]);
-
-      }
+        await connection.execute('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)',[userid])
     } catch (error) {
       console.log(`\nError in uploadImages for user ${username}:\n `, error);
     }
 }
-  
-async function getUserImages(username) {
-    console.log(username)
-    try {
-        const query = 'SELECT frontimage, backimage FROM userid WHERE username = ?';
-        let [rows, fields] = await connection.execute(query, [username]);
 
-        if (rows.length > 0) {
-            const frontImage = rows[0].frontimage.toString('base64');
-            const backImage = rows[0].backimage.toString('base64');
-            console.log(frontImage)
-            return [frontImage, backImage];
-          } else {
-            return null;
-          }
+  
+async function getUserid(username) {
+    console.log(`Getting user idName: ${username}`)
+    try {
+        let [rows, fields] = await connection.promise().query('SELECT * FROM userid WHERE username = ?', [username])
+
+        return rows
         } catch (error) {
           console.log(`\nError in getUserImages for user ${username}:\n `, error);
           return null;
         }
-
     }
-  
   
 
 async function updateUser(userData){
@@ -188,4 +193,14 @@ async function updateUser(userData){
     }
 }
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations,  checkPassword,authSession, generateQR, updateUser, uploadImages, getUserImages };
+async function setHasID(username){
+    try{
+        let query = 'UPDATE users SET hasID = 1'
+    
+        await connection.promise().query(query)
+    } catch(e){
+        console.log("\nERROR in setHasID")
+    }
+}
+
+module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, setHasID, upload };

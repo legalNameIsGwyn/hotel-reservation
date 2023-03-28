@@ -2,26 +2,9 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const saltRounds = 10
-const multer = require('multer')
 const path = require('path')
-const fs = require('fs')
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage });
-
-const {
-    encrypt,
-    decrypt,
-    userExists,
-    addUser,
-    getUser,
-    addReservation,
-    getReservations,
-    authSession,
-    generateQR,
-    updateUser,
-    uploadImages,
-    getUserImages
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, setHasID, upload 
   } = require('../server-utils');
 const { render } = require('ejs')
 
@@ -33,8 +16,6 @@ router
     .post(authSession, (req, res) => {
         res.send("why are you here?")
     })
-
-// ================ HOTELS =================
 
 router
     .route('/hotels')
@@ -50,7 +31,6 @@ router
         res.redirect('dash')
     })
 
-// ================ RESERVATION =================
 router
     .route('/reservations')
     .get(authSession, async (req,res) => {
@@ -62,15 +42,13 @@ router
         console.log("in reservations_history")
 
     })
-// ================ QR CODE =================
+
 router
     .route('/userQR')
     .get(authSession, async (req,res) => {
         const qrImage = await generateQR(req.session.username);
         res.render('user/userQR', {qrImage});
     })
-
-// ================= PORFILE ==================
 
 router
     .route('/profile')
@@ -79,15 +57,13 @@ router
         let user = await getUser(username, "users")
 
         if (user.hasID == 1){
-            let imageArray = await getUserImages(username)
-            console.log(imageArray)
-            // res.render('user/profile', {user : user, frontImage : imageArray[0], backImage : imageArray[1]})
+            let idName = await getIdName(username)
+            console.log(idName)
+
 
         }
-        // res.render('user/profile', {user : user})
+        res.render('user/profile', {user : user})
     })
-
-// ================= POINTS ==================
 
 router
     .route('/points')
@@ -95,14 +71,12 @@ router
         res.render('user/points')
     })
     
-// ================= EDIT ==================
 router
     .route('/edit')
     .get(authSession, async (req, res) => {
         let sessionUser = await decrypt(req.session.username)
         let table = req.session.table
         let user = await getUser(sessionUser, table)
-        console.log(user)
         res.render('user/edit',{ user: user})
     })
     .post(authSession, async (req, res) => {
@@ -132,28 +106,29 @@ router
         res.render('user/profile', {user: user, bookings: bookings})
     })
 
-// ================ EDIT ID ==================
-
 router
     .route('/editID')
     .get(authSession,  (req,res) => {
         res.render('user/editID')
     })
     .post(authSession, upload.fields([
-        { name: 'frontID' },
-        { name: 'backID'}]),
+        { name: 'frontID' }, 
+        { name: 'backID' }]), 
         async (req,res) => {
-        let idType = req.body.idType
-
-        const frontImage = req.files['frontID'][0].buffer.toString('base64');
-        const backImage = req.files['backID'][0].buffer.toString('base64');
-
+            
         let username = await decrypt(req.session.username)
-        let user = await getUser(username, "users")
-        let hasID = user.hasID
+        let idType = req.body.idType
+        const frontid = req.files[0].filename;
+        const backid = req.files[1].filename;
 
-        await uploadImages(username, hasID, frontImage, backImage, idType);
-        res.render('user/profile', { user: user, frontImage : frontImage, backImage : backImage })
+        let userid = [username, frontid, backid, idType]
+        console.log(userid)
+        // uploadIdName(userid)
+        // res.render('user/userDash')
+        // res.render('user/profile', {
+        //     user: user, 
+        //     frontFilepath: frontFilepath, 
+        //     backFilepath: backFilepath})
     })
 
 module.exports = router
