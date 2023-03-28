@@ -12,7 +12,7 @@ const userRouter = require('./routes/user')
 const staffRouter = require('./routes/staff')
 const { sessionStore } = require('./sql-connection')
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, setHasID, upload 
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, upload 
   } = require('./server-utils');
 const exp = require('constants');
   
@@ -54,8 +54,6 @@ const opts = {
 https.createServer(opts, app).listen(port)
 console.log("Listening to port " + port + ".");
 
-// ================= LOGIN ==================
-
 app.route("/login")
     .get((req, res) => {
         res.render("login")
@@ -71,7 +69,10 @@ app.route("/login")
             res.render('login', { message: "User does not exist."})
         } else if (userInUSERS) {
             let user = await getUser(username, "users")
-
+            console.log(user)
+            if(user.active == 0){
+                res.render('login', { message: "User does not exist."})
+            }
             if (!await checkPassword(password, username, "users")){
                 res.render('login', { 
                     message: "Incorrect password.", 
@@ -114,8 +115,6 @@ app.get('/logout', authSession, (req, res) => {
         res.redirect('/login');
     })
 })
-
-// ================ REGISTER ==================
 
 app
     .route("/register")

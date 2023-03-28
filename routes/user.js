@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 const path = require('path')
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, setHasID, upload 
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, upload  
   } = require('../server-utils');
 const { render } = require('ejs')
 
@@ -16,6 +16,21 @@ router
     .post(authSession, (req, res) => {
         res.send("why are you here?")
     })
+router
+    .route('/delete')
+    .get(authSession, (req, res) => {
+        res.render('user/delete')
+    })
+    .post(authSession, async (req, res) => {
+        let username = await decrypt(req.session.username)
+        let passCheck = checkPassword(req.body.password, username, req.session.table)
+
+        if(passCheck){
+            await deleteAccount(username)
+        } else if (!passCheck) {
+            res.render('user/delete', {message : "Invalid password."})
+        }
+    })
 
 router
     .route('/hotels')
@@ -23,18 +38,21 @@ router
         res.render('user/hotels')
     })
     .post(authSession,async (req, res) => {
-        let username = req.session.username
-        let decryptedUsername = await decrypt(username)
-        let reservation = [decryptedUsername, req.body.checkin, req.body.checkout, req.body.adults, req.body.children]
+        let username = await decrypt(req.session.username)
+        let reservation = [username, req.body.checkin, req.body.checkout, req.body.adults, req.body.children]
 
         addReservation(reservation)
         res.redirect('dash')
     })
 
 router
+    .route('/')
+
+router
     .route('/reservations')
     .get(authSession, async (req,res) => {
-        let bookings = await getReservations(await getUser(req.session.username).username)
+        let username = await decrypt(req.session.username)
+        let bookings = await getReservations(username)
         res.render("user/reservations", {bookings: bookings})
 
     })

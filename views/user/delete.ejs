@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easytel Login</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>Deleting Account</h1>
+    <% if (locals.message) { %>
+        <span class="error message"><%= locals.message %> </span>
+    <% } %>
+    <form action="delete" id="delete-form" method="POST" class="section-box">
+
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" class="textbox" required>
+        </div>
+
+    </form>
+    <div class="buttons">
+        <button type="submit" form="delete-form">Submit</button>
+        <form action="profile" method="get">
+            <button type="submit" >Back</button>
+        </form>
+    </div>
+    
+
+
+</body>
+</html>

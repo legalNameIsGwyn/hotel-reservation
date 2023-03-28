@@ -18,7 +18,7 @@ const {
 router.get("/", (req, res) => {
     res.send("you're logged in staff")
 })
-// ================ DASHBOARD =====================
+
 router
     .route('/dash')
     .get(authSession, (req, res) => {
@@ -28,7 +28,7 @@ router
         
     })
 
-// ================= READ QR ======================
+
 router
     .route("/readQR")
     .get((req,res) => {

@@ -92,7 +92,7 @@ async function getUser(username, table){
     try {
         if(table == "users"){
             let [rows, fields] = await connection.promise().query(
-                'SELECT * FROM users WHERE username = ?', [username]
+                'SELECT username, password, first_name, last_name, sex, age, contact_number, DATE_FORMAT(birthday, "%Y-%m-%d") as birthday, address, active, hasID FROM users WHERE username = ?', [username]
             );
             return rows[0];
         } else if (table == "admins") {
@@ -122,8 +122,13 @@ async function addReservation(reservation) {
 async function getReservations(username) {
     try{
         let [rows, fields] = await connection.promise().query(
-            'SELECT * FROM reservations WHERE username = ? ORDER BY id DESC', [username]
+            'SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, adults, children FROM reservations WHERE username = ? ORDER BY id DESC', [username]
         )
+                rows = rows.map(row => {
+            row.check_in = new Date(row.check_in).toLocaleDateString();
+            row.check_out = new Date(row.check_out).toLocaleDateString();
+            return row;
+        });
         return rows;
     } catch (error){
         console.log('\nERROR IN getReservations\n')
@@ -132,6 +137,10 @@ async function getReservations(username) {
 async function checkPassword(password, username, table){
     let user = await getUser(username, table)
     return await bcrypt.compare(password, user.password)
+}
+
+async function deleteAccount(username) {
+    await connection.execute('UPDATE users SET active = 0 WHERE username = ?', username)
 }
 
 function authSession(req, res, next){
@@ -159,10 +168,10 @@ async function uploadUserid(userid, hasID) {
         if(hasID == 0){
             await connection.execute('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)', userid)
 
-            await connection.execute('UPDATE users SET hasID = 1')
+            await connection.execute('UPDATE users SET hasID = 1 WHERE username = ?', userid[0])
         } else if (hasID == 1) {
             userid.push(userid.shift())
-            await connection.execute('UPDATE userid SET frontid = ?, backid = ?, idtype = ? WHERE username = ?', userid)
+            await connection.execute('UPDATE userid SET frontid = ?, backid = ?, idtype = ? WHERE username = ?', userid[0])
         }
 
     } catch (error) {
@@ -198,4 +207,4 @@ async function updateUser(userData){
 }
 
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, upload };
+module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, upload };

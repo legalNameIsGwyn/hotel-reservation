@@ -29,8 +29,8 @@ body > * {
 
 /* default section behaviour */
 .section-box{
-    min-width: 90px;
-    max-width: 350px;
+    
+    width: 300px;
     min-height: auto;
     margin-bottom: 30px;
     padding: 15px;
