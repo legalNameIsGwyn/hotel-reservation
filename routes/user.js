@@ -57,10 +57,15 @@ router
         let user = await getUser(username, "users")
 
         if (user.hasID == 1){
-            let idName = await getIdName(username)
+            let idName = await getUserid(username)
             console.log(idName)
+            let frontid = idName[1]
+            let backid = idName[2]
 
+            let frontFilepath = `/uploads/${frontid}`;
+            let backFilepath = `/uploads/${backid}`;
 
+            res.render('user/profile', {user: user, frontFilepath: frontFilepath, backFilepath :backFilepath})
         }
         res.render('user/profile', {user : user})
     })
@@ -119,6 +124,7 @@ router
         let username = await decrypt(req.session.username)
         let user = await getUser(username, req.session.table)
         let idType = req.body.idType
+        let hasID = user.hasID
         const frontid = req.files['frontID'][0].filename;
         const backid = req.files['backID'][0].filename;
 
@@ -126,10 +132,10 @@ router
         let backFilepath = `/uploads/${backid}`;
 
         let userid = [username, frontid, backid, idType]
-        console.log(userid)
-        uploadUserid(userid)
-        setHasID(username)
 
+        uploadUserid(userid, hasID) 
+        user.hasID = 1
+        
         res.render('user/profile', {
             user: user, 
             frontFilepath: frontFilepath, 

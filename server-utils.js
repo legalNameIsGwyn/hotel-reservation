@@ -154,15 +154,21 @@ const generateQR = async text => {
     }
 }
 
-async function uploadUserid(userid) {
-    console.log(`Uploading to userid:\n${userid[0]}\n${userid[1]}\n${userid[3]}`)
+async function uploadUserid(userid, hasID) {
     try {
-        await connection.execute('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)', userid)
+        if(hasID == 0){
+            await connection.execute('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)', userid)
+
+            await connection.execute('UPDATE users SET hasID = 1')
+        } else if (hasID == 1) {
+            userid.push(userid.shift())
+            await connection.execute('UPDATE userid SET frontid = ?, backid = ?, idtype = ? WHERE username = ?', userid)
+        }
+
     } catch (error) {
-      console.log(`\nError in uploadImages for user ${username}:\n `, error);
+      console.log(`\nError in uploadImages\n `, error);
     }
 }
-
   
 async function getUserid(username) {
     console.log(`Getting user idName: ${username}`)
@@ -192,14 +198,5 @@ async function updateUser(userData){
     }
 }
 
-async function setHasID(username){
-    try{
-        let query = 'UPDATE users SET hasID = 1'
-    
-        await connection.promise().query(query)
-    } catch(e){
-        console.log("\nERROR in setHasID")
-    }
-}
 
-module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, setHasID, upload };
+module.exports = {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, upload };
