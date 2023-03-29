@@ -41,7 +41,7 @@ router
     })
     .post(authSession,async (req, res) => {
         let username = await decrypt(req.session.username)
-        let reservation = [username, req.body.checkin, req.body.checkout, "confirmed", req.body.adults, req.body.children]
+        let reservation = [username, req.body.checkin, req.body.checkout, "confirmed", 0, req.body.adults, req.body.children]
 
         addReservation(reservation)
         res.redirect('dash')
@@ -55,7 +55,7 @@ router
     .get(authSession, async (req,res) => {
         let username = await decrypt(req.session.username)
         let bookings = await getReservations(username)
-        res.render("user/reservations", {bookings: bookings})
+        res.render("user/reservations", { bookings: bookings})
 
     })
     .post(authSession, async (req, res) => {

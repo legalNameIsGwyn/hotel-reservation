@@ -1,0 +1,37 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easytel</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <script src="/public/scripts/script.js"></script>
+</head>
+<body>
+    <h1>Update Checkout Date</h1>
+    <% if (locals.message) { %>
+        <span class="error message"><%= locals.message %> </span>
+    <% } %>
+    <form action="/checkout-update" method="POST" name="checkoutUpdate-form" id="checkoutUpdate-form">
+        <div class="input-group divided">
+            <div class="divider">
+                <label for="newCheckout">New Check-out Date:</label>
+                <input class="textbox" type="date" id="newCheckout" name="newCheckout" required>
+            </div>
+            <div class="divider">
+                <label for="bookingID">Username:</label>
+                <input class="textbox" id="bookingID" type="number" name="bookingID"  required>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="username">Username:</label>
+            <input class="textbox" id="username" type="text" name="username"  required>
+        </div>
+        
+    </form>
+    <div class="buttons">
+        <button type="submit" form="checkoutUpdate-form">Submit</button>
+        <form action="dash" method="get">
+            <button type="submit" >Back</button>
+        </form>
+    </div>
+</body>

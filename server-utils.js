@@ -112,7 +112,7 @@ async function getUser(username, table){
 async function addReservation(reservation) {
     try{
         await connection.execute(
-            'INSERT INTO reservations (username, checkin, checkout, bookingstatus, adults, children) VALUES (?, ?, ?, ?, ?, ?)', reservation
+            'INSERT INTO reservations (username, checkin, checkout, bookingstatus, room, adults, children) VALUES (?, ?, ?, ?, ?, ?, ?)', reservation
         )
         console.log('Reservation added.')
     } catch (error){
@@ -123,7 +123,7 @@ async function addReservation(reservation) {
 async function getReservations(username) {
     try{
         let [rows, fields] = await connection.promise().query(
-            'SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, adults, children FROM reservations WHERE username = ? ORDER BY id DESC', [username]
+            'SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, room, adults, children FROM reservations WHERE username = ? ORDER BY id DESC', [username]
         )
                 rows = rows.map(row => {
             row.check_in = new Date(row.check_in).toLocaleDateString();
@@ -215,40 +215,55 @@ async function updateBookingStatus(username, bookingID, status) {
     await connection.promise().query("UPDATE reservations SET bookingstatus = ? WHERE username = ? AND id = ?", [status, username, bookingID])
 }
 
+async function updateRoom(username, bookingID, room){
+    await connection.promise().query("UPDATE reservations SET room = ? WHERE username = ? AND id = ?", [room, username, bookingID])
+}
+
+async function updateCheckout(username, bookingID, room){
+    await connection.promise().query("UPDATE reservations SET checkout = ? WHERE username = ? AND id = ?", [room, username, bookingID])
+}
+
+async function getCurrentBookingID(username){
+    try {
+        let [rows, field] = await connection.promise().query("SELECT id FROM reservations WHERE bookingstatus = 'checked-in' AND username = ? ORDER BY id DESC LIMIT 1", username)
+
+        return rows[0].id
+    } catch (e) {
+        console.log("\nERROR in getCurrentBooking")
+    }
+}
+
 async function getUnfinishedBookings(username){
     try{
-        let [rows, fields] = await connection.promise().query('SELECT id, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, adults, children FROM reservations WHERE username = ? AND checkin >= CURDATE() ORDER BY id DESC', [username])
+        let [rows, fields] = await connection.promise().query('SELECT id, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, room, adults, children FROM reservations WHERE username = ? AND checkin >= CURDATE() ORDER BY id DESC', [username])
         return rows;
     } catch(e){
         console.log("error in getUnfinishedBookings")
     }
 }
 
-async function hasCurrentUser(){
-    const [rows] = await connection.promise().query('SELECT * FROM currentuser')
-
-    return rows.length > 0
+async function currentUser(){
+    const [rows] = await connection.promise().query('SELECT * FROM currentuser LIMIT 1');
+    if (rows.length === 0) {
+      return null; 
+    }
+    return rows[0].username;
 }
 
 async function setCurrentUser(username){
-    let hasCurrentUser = await hasCurrentUser()
+    let user = await currentUser()
     try{
         let query
-        if(hasCurrentUser){
+        if(user){
             query = "UPDATE currentuser SET username = ?"
-        } else if (!hasCurrentUser){
+        } else if (!user){
             query = "INSERT INTO currentuser (username) VALUES (?)"
         }
 
-        await connection.execute(query, username)
+        await connection.promise().query(query, username)
     } catch(e) {
         console.log("Error in setCurrentUser", e)
     }
 }
 
-async function getCurrentUser(){
-    return await connection.promise().query("SELECT * FROM currentuser")
-}
-
-
-module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, setCurrentUser, getCurrentUser, upload };
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, upload };

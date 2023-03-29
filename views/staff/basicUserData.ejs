@@ -26,18 +26,16 @@
         
     </div>
 
-    <form id="reservation_form" method="POST" action="userdata/" name="reservation_form" autocomplete="on">
+    <form id="reservation_form" method="POST" action="userdata" name="reservation_form" autocomplete="on">
 
         <div class="section-box">
-            <div class="input-group divided">
-                <div class="divider">
-                    <label for="checkin"><h3>Check-in</h3></label>
-                    <input class="textbox" type="date" id="checkin" name="checkin">
-                </div>
-                <div class="divider">
-                    <label for="checkout"><h3>Check-out</h3></label>
-                    <input class="textbox" type="date" id="checkout" name="checkout">
-                </div>
+            <div class="input-group">
+                <label for="checkout"><h3>Check-out</h3></label>
+                <input class="textbox" type="date" id="checkout" name="checkout">
+            </div>
+            <div class="input-group">
+                <label for="checkin"><h3>Check-in</h3></label>
+                <input class="textbox" type="date" id="checkin" name="checkin">
             </div>
 
             <div class="input-group divided">
@@ -53,6 +51,14 @@
                     <label for="room">Room</label>
                     <input class="textbox" type="number" name="room" id="room" value="0">
                 </div>
+            </div>
+            <div class="input-group">
+                <label for="status">Status</label>
+                <select class="textbox" name="status" id="status">
+                    <option value="checked-in">Checked-in</option>
+                    <option value="checked-out">Checked-out</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
             </div>
         </div>
     </form>
@@ -71,7 +77,8 @@
         <div class="section-box booking-row">
             <% bookings.forEach(function(booking) { %>
             <p><strong>Booking ID:</strong> <%= booking.id %><br>
-                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %><br><strong>Status: </strong><%= booking.bookingstatus %></p>
+                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %><br><strong>Status: </strong><%= booking.bookingstatus %>
+                <br><strong>Room: </strong><%= booking.room %></p>
             <% }); %>
             
         </div>

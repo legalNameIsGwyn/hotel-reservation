@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const router = express.Router()
 const jsonParser = express.json()
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, setCurrentUser, getCurrentUser, upload  
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom,getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, upload  
   } = require('../server-utils');
 
 router.get("/", (req, res) => {
@@ -22,22 +22,59 @@ router
 
 router
     .route("/readQR")
-    .get((req,res) => {
+    .get(authSession, (req,res) => {
         res.render("staff/readQR")
     })
     .post(jsonParser, async (req, res) => {
         let username = await decrypt(req.body.text)
+        console.log(`The user is: ${username}`)
         await setCurrentUser(username)
         res.redirect(`userdata`)
     })
 
 router
+    .route("/checkout")
+    .get(authSession, (req, res) => {
+        res.render("staff/checkout")
+    })
+    .post(jsonParser, async(req, res) => {
+        let username = await decrypt(req.body.text)
+        let currBookingID = await getCurrentBookingID(username)
+
+        await updateBookingStatus(username, currBookingID, "checked-out")
+        res.redirect("dash")
+    })
+
+router
     .route('/userdata')
-    .get(async(req,res) => {
-        let username = req.params.username;
+    .get(authSession, async(req,res) => {
+        let username = await currentUser();
         let user = await getUser(username, "users");
         let bookings = await getUnfinishedBookings(username)
         res.render('staff/basicUserData', { user: user, bookings: bookings});
     })
+    .post(authSession,async (req, res) => {
+        let username = await currentUser()
+        let status = req.body.status
+        let reservation = [username, req.body.checkin, req.body.checkout, status, req.body.room, req.body.adults, req.body.children]
 
+        await addReservation(reservation)
+        res.redirect('dash')
+    })
+
+router
+    .route('/checkout-update')
+    .get(authSession, async(req, res) => {
+        res.render('staff/updateCheckout')
+    })
+    .post(authSession, async(req, res) => {
+        let username = req.body.username
+        let newCheckout = req.body.newCheckout
+        let bookingID = req.body.bookingID
+
+        if(!await userExists(username, "users")){
+            res.render('updateCheckout', {message: "User does not exist"})
+        }
+        await updateCheckout(username, bookingID, newCheckout)
+    } )
 module.exports = router
