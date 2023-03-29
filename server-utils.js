@@ -197,14 +197,10 @@ async function getUserid(username) {
   
 
 async function updateUser(userData){
-
     try{
-
         const query = 'UPDATE users SET password = ?,first_name = ?,last_name = ?,sex = ?,age = ?,contact_number = ?,birthday = ?,email = ?,address = ? WHERE username = ?';
           
         await connection.promise().query(query, userData);
-
-
     } catch(e) {
         console.log('Error in updateUser\n')
         console.log(e)

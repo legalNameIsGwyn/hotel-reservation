@@ -76,5 +76,6 @@ router
             res.render('updateCheckout', {message: "User does not exist"})
         }
         await updateCheckout(username, bookingID, newCheckout)
+        res.render('dash')
     } )
 module.exports = router

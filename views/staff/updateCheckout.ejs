@@ -11,20 +11,20 @@
     <% if (locals.message) { %>
         <span class="error message"><%= locals.message %> </span>
     <% } %>
-    <form action="/checkout-update" method="POST" name="checkoutUpdate-form" id="checkoutUpdate-form">
+    <form action="checkout-update" method="POST" name="checkoutUpdate-form" id="checkoutUpdate-form" class="section-box">
         <div class="input-group divided">
             <div class="divider">
-                <label for="newCheckout">New Check-out Date:</label>
-                <input class="textbox" type="date" id="newCheckout" name="newCheckout" required>
+                <label for="username">Username:</label>
+                <input class="textbox" id="username" type="text" name="username"  required>
             </div>
             <div class="divider">
-                <label for="bookingID">Username:</label>
+                <label for="bookingID">Booking ID:</label>
                 <input class="textbox" id="bookingID" type="number" name="bookingID"  required>
             </div>
         </div>
         <div class="input-group">
-            <label for="username">Username:</label>
-            <input class="textbox" id="username" type="text" name="username"  required>
+            <label for="newCheckout">New Check-out Date:</label>
+            <input class="textbox" type="date" id="newCheckout" name="newCheckout" required>
         </div>
         
     </form>
