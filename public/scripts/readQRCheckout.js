@@ -4,19 +4,21 @@ let serverAddress = "https://192.168.1.7:3000/staff/checkout"
 function onScanSuccess(decodedText, decodedResult) {
     html5QrcodeScanner.clear();
     fetch(serverAddress, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        mode: 'cors',
-        body: JSON.stringify({text: decodedText})
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      mode: 'cors',
+      body: JSON.stringify({text: decodedText})
     }).then((response) => {
-        if(response.redirected){
-            window.location.href = response.url;
+      response.json().then((data) => {
+        if (data.message) {
+          confirm(data.message);
         }
-    })
-    .catch((error) => {
-        console.log('Error', error)
+        window.location.href = response.url;
+      });
+    }).catch((error) => {
+      console.log('Error', error)
     });
-}
+  }  
 
 function onScanFailure(error) {
     // handle scan failure, usually better to ignore and keep scanning.

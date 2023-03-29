@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const router = express.Router()
 const jsonParser = express.json()
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, upload } = require('../server-utils');
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getLatestBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, upload } = require('../server-utils');
 
 router.get("/", (req, res) => {
     res.send("you're logged in staff")
@@ -38,12 +38,23 @@ router
         res.render("staff/checkout")
     })
     .post(jsonParser, async(req, res) => {
-        let username = await decrypt(req.body.text)
-        let currBookingID = await getCurrentBookingID(username)
-
-        await updateBookingStatus(username, currBookingID, "checked-out")
-        res.redirect("dash")
+        try {
+            let username = await decrypt(req.body.text)
+            let currBookingID = await getLatestBookingID(username, "confirmed")
+    
+            if(!currBookingID){
+                console.log('no checked-in found')
+                res.status(404).json({ message: "No latest checked-in for this user." });
+            } else {
+                await updateBookingStatus(username, currBookingID, "checked-in")
+                res.json({ message: "Check-in successful." });
+            }
+        } catch (error) {
+            console.error("\nERROR in checkout POST",error);
+            res.status(500).json({ message: "An error occurred while processing your request." });
+        }
     })
+    
 
 router
     .route('/userdata')

@@ -242,13 +242,14 @@ async function updateCheckout(username, bookingID, room){
     await connection.promise().query("UPDATE reservations SET checkout = ? WHERE username = ? AND id = ?", [room, username, bookingID])
 }
 
-async function getCurrentBookingID(username){
+async function getLatestBookingID(username, bookingStatus){
+    console.log(username)
     try {
-        let [rows, field] = await connection.promise().query("SELECT id FROM reservations WHERE bookingstatus = 'checked-in' AND username = ? ORDER BY id DESC LIMIT 1", username)
-
-        return rows[0].id
+        let [rows, field] = await connection.promise().query("SELECT id FROM reservations WHERE bookingstatus = ? AND username = ? ORDER BY id DESC LIMIT 1", [bookingStatus, username])
+        console.log(rows)
+        return rows[0]
     } catch (e) {
-        console.log("\nERROR in getCurrentBooking")
+        console.log("\nERROR in getCurrentBooking\n", e)
     }
 }
 
@@ -316,4 +317,4 @@ async function getUserPayment(username){
 }
 
 
-module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, addUserPayment, getUserPayment, upload };
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getLatestBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, addUserPayment, getUserPayment, upload };
