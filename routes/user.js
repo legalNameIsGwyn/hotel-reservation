@@ -53,11 +53,15 @@ router
         res.render('user/hotels')
     })
     .post(authSession,async (req, res) => {
-        let username = await decrypt(req.session.username)
-        let reservation = [username, req.body.checkin, req.body.checkout, "confirmed", 0, req.body.adults, req.body.children]
-
-        addReservation(reservation)
-        res.redirect('dash')
+        try{
+            let username = await decrypt(req.session.username)
+            let reservation = [username, req.body.checkin, req.body.checkout, "confirmed", 0, req.body.adults, req.body.children]
+    
+            addReservation(reservation)
+            res.redirect('dash')
+        } catch(e){
+            console.error("\nERROR in hotels POST\n",e)
+        }
     })
 
 router
@@ -102,9 +106,9 @@ router
             let backFilePath = `/uploads/${backid}`;
 
             if(userHasPay){
-            let userpay = await getUserPayment(username)
-            
-            res.render('user/profile', {user: user, frontFilePath : frontFilePath, backFilePath : backFilePath, userpay: userpay})
+                let userpay = await getUserPayment(username)
+                
+                res.render('user/profile', {user: user, frontFilePath : frontFilePath, backFilePath : backFilePath, userpay: userpay})
             } else {
                 res.render('user/profile', {user : user, userHasPay, frontFilePath : frontFilePath, backFilePath : backFilePath})
             }
@@ -178,7 +182,6 @@ router
         let userid = [username, frontid, backid, idType]
 
         await uploadUserid(userid, hasID) 
-        user.hasID = 1
         
         res.render('user/profile', {
             user: user, 

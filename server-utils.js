@@ -191,9 +191,12 @@ const generateQR = async text => {
 async function uploadUserid(userid, hasID) {
     try {
         if(hasID == 0){
-            await connection.execute('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)', userid)
+            console.log("No id")
+            await connection.promise().query('INSERT INTO userid (username, frontid, backid, idtype) VALUES (?,?,?,?)', userid)
 
-            await connection.execute('UPDATE users SET hasID = 1 WHERE username = ?', userid[0])
+            console.log("updating userid")
+            await connection.promise().query('UPDATE users SET hasID = 1 WHERE username = ?', userid[0])
+            console.log(userid[0])
         } else if (hasID == 1) {
             userid.push(userid.shift())
             await connection.execute('UPDATE userid SET frontid = ?, backid = ?, idtype = ? WHERE username = ?', userid[0])
