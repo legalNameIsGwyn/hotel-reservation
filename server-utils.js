@@ -78,6 +78,7 @@ async function userExists(username, table) {
 }
 
 async function addUser(user) {
+    console.log(user)
     try {
         // Insert new user into students
         await connection.promise().query(

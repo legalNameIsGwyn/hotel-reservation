@@ -1,7 +1,7 @@
 const { render } = require('ejs')
 const express = require('express')
 const session = require('express-session')
-
+const favicon = require('serve-favicon')
 const bcrypt = require('bcrypt');
 const https = require('https')
 const fs = require('fs')
@@ -36,6 +36,7 @@ app.use(express.static("public"))
 app.use('/uploads',express.static("uploads"))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+app.use(favicon(__dirname+'/favicon.ico'))
 
 app.use('/user', userRouter)
 app.use('/staff', staffRouter)

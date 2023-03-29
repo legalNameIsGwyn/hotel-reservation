@@ -1,9 +1,9 @@
 
 :root {
     --color1: rgb(0, 74, 148);
-    --color2:rgb(245, 110, 148);
-    --color3: rgb(244, 231, 12); /* background */
-    --color4: rgb(3, 209, 235);
+    --color2: rgb(251, 235, 235);
+    --color3: rgb(19, 73, 73); /* background */
+    --color4: rgb(28, 111, 111);
     --color5: rgb(251, 235, 235);
 }
 
@@ -14,6 +14,7 @@
 
 body{
     background-color: var(--color3);
+    color: rgb(249, 252, 253);
     font-family: Manrope;
     display: flex;
     flex-direction: column;
@@ -27,6 +28,18 @@ h1 {
 
 body > * {
     margin: 10px;
+}
+
+header{
+    height: 200px;
+}
+
+header img {
+    max-width: 100%;
+    max-height: 100%;
+}
+a{
+    color:rgb(249, 252, 253) ;
 }
 
 
@@ -94,26 +107,26 @@ body > * {
     width: 130px;
     height: 50px;
 }
-
-.submit, input[type=submit]{
+.back, button, .submit, input[type=submit]{
     background-color: var(--color4);
-    box-shadow: 8px 10px var(--color2);
+    box-shadow: 5px 6px var(--color2);
 }
 
+
+.back:hover, button:hover,
 .submit:hover, input[type=submit]:hover{
     background-color: var(--color2);
-    box-shadow: 5px 10px var(--color4);
+    box-shadow: 5px 6px var(--color4);
 }
 
-.back, button {
+ /* {
     background-color: var(--color2);
-    box-shadow: 5px 10px var(--color4);
+    box-shadow: 8px 10px var(--color4);
 }
-
-.back:hover, button:hover  {
+{
     background-color: var(--color4);
-    box-shadow: 5px 10px var(--color2);
-}
+    box-shadow: 8px 10px var(--color2);
+} */
 
 .error.message {
     color: red;
