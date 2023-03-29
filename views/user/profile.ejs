@@ -17,8 +17,12 @@
     <p><strong>Birthday:</strong> <%= user.birthday %></p>
     <p><strong>Email:</strong> <%= user.email %></p>
     <p><strong>Address:</strong> <%= user.address %></p>
-    <p><strong>Payment Method:</strong> <%= userpay.payMethod %></p>
-    <p><strong>Payment Number:</strong> <%= userpay.payNumber %></p>
+<% if (!locals.userHasPay) {%>
+    <p><strong>User has no payment methods.</strong></p>
+<% } else if (locals.userHasPay) {%>
+    <p><strong>Payment Type:</strong> <%= userpay.payMethod %></p>
+    <p><strong>Account Number:</strong> <%= userpay.payNumber %></p>
+<% } %>
 </div>
 
 <div class="buttons">

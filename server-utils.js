@@ -63,7 +63,11 @@ async function userExists(username, table) {
                 'SELECT * FROM admins WHERE username = ?', [username]
             )
             return rows.length > 0
-        } 
+        } else if (table == "userpayment"){
+            const [rows] = await connection.promise().execute('SELECT * FROM admins WHERE username = ?', [username]
+            )
+            return rows.length > 0
+        }
 
     } catch (error) {
         console.error(error);
@@ -297,4 +301,15 @@ async function addUserPayment(username, method, number){
     }
 }
 
-module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, addUserPayment, upload };
+async function getUserPayment(username){
+    try{
+        const [rows] = await connection.promise().query('SELECT * FROM userpayment WHERE username = ?', [username]);
+
+        return rows
+    }catch(e) {
+        console.log("\nERROR in getUserPayment")
+    }
+}
+
+
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, addUserPayment, getUserPayment, upload };

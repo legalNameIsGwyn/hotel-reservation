@@ -72,23 +72,28 @@ router
 
 router
     .route('/profile')
-    .get(authSession,async (req,res) => {
-        let username = await decrypt(req.session.username)
+    .get(authSession, async (req,res) => {
+        var username = await decrypt(req.session.username)
         let user = await getUser(username, "users")
+        let userHasPay = await userExists(username, "userpayment")
 
-        if (user.hasID == 1){
-            let username = await decrypt(req.session.username)
+        if (user.hasID == 1 ){
             let idName = await getUserid(username)
             let frontid = idName[0].frontid
             let backid = idName[0].backid
 
             let frontFilePath = `/uploads/${frontid}`;
-            let backFfilePath = `/uploads/${backid}`;
+            let backFilePath = `/uploads/${backid}`;
 
+            if(userHasPay){
             let userpay = await getUserPayment(username)
+            
             res.render('user/profile', {user: user, frontFilePath : frontFilePath, backFilePath : backFilePath, userpay: userpay})
+            } else {
+                res.render('user/profile', {user : user, userHasPay, frontFilePath : frontFilePath, backFilePath : backFilePath})
+            }
         } else {
-            res.render('user/profile', {user : user})
+            res.render('user/profile', {user : user, userHasPay})
         }
         
     })
