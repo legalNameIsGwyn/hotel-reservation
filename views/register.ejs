@@ -17,12 +17,12 @@
             <div class="input-group divided">
                 <div class="divider">
                     <label for="first_name">First Name:</label>
-                    <input class="textbox" id="first_name" type="text" name="first_name" value="<%= locals.first_name %>"  required>
+                    <input class="textbox" id="first_name" type="text" name="first_name" value="<%= locals.first_name %>"  pattern="[a-zA-Z]*" required>
                 </div>
         
                 <div class="divider">
                     <label for="last_name">Last Name:</label>
-                    <input class="textbox" id="last_name" type="text" name="last_name">
+                    <input class="textbox" id="last_name" type="text" name="last_name" pattern="[a-zA-Z]*" required>
                 </div>
         
             </div>
@@ -30,7 +30,7 @@
             <div class="input-group divided">
                 <div class="divider">
                     <label for="sex">Sex:</label>
-                    <select class="textbox dropdown" name="sex" id="sex" >
+                    <select class="textbox dropdown" name="sex" id="sex" required>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
@@ -38,29 +38,40 @@
     
                 <div class="divider">
                     <label for="age">Age:</label>
-                    <input class="textbox" id="age" type="number" name="age" value="<%= locals.age %>" >
+                    <input class="textbox" id="age" type="number" name="age" min="0" value="<%= locals.age %>" required>
                 </div>
 
                 <div class="divider">
                     <label for="birthday">Birthday:</label>
-                    <input class="textbox" type="date" id="birthday" name="birthday" value="<%= locals.birthday %>" >
+                    <input class="textbox" type="date" id="birthday" name="birthday" value="<%= locals.birthday %>" required>
                 </div>
     
             </div>
             
             <div class="input-group">
                 <label for="contact_number">Contact Number:</label>
-                <input class="textbox" id="contact_number" type="text" name="contact_number" value="<%= locals.contact_number %>" >
+                <input class="textbox" id="contact_number" type="number" name="contact_number" value="<%= locals.contact_number %>" required>
             </div>
     
             <div class="input-group">
                 <label for="email">Email:</label>
-                <input class="textbox" id="email" type="text" name="email" value="<%= locals.email%>" >
+                <input class="textbox" id="email" type="email" name="email" value="<%= locals.email%>" pattern="[^@]+@[^@]+\.[a-zA-Z]{2 6}" required>
             </div>
     
             <div class="input-group ">
                 <label for="address">Full Address:</label>
-                <input class="textbox" id="address" type="text" name="address" value="<%= locals.address %>" >
+                <input class="textbox" id="address" type="text" name="address" value="<%= locals.address %>" required >
+            </div>
+        </div>
+
+        <div class="section-box divided">
+            <div class="divider">
+                <label for="payMethod">Payment Method:</label>
+                <input class="textbox" id="payMethod" type="payMethod" name="address" required>
+            </div>
+            <div class="divider">
+                <label for="payNumber">Payment Number:</label>
+                <input class="textbox" id="payNumber" type="number" name="payNumber" required>
             </div>
         </div>
         <% if (locals.message) { %>

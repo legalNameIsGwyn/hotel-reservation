@@ -1,7 +1,7 @@
 const { render } = require('ejs')
 const express = require('express')
 const session = require('express-session')
-
+const sanitizeHtml = require('sanitize-html')
 const bcrypt = require('bcrypt');
 const https = require('https')
 const fs = require('fs')
@@ -12,9 +12,14 @@ const userRouter = require('./routes/user')
 const staffRouter = require('./routes/staff')
 const { sessionStore } = require('./sql-connection')
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, upload 
+const { 
+    encrypt, 
+    userExists, 
+    addUser, 
+    getUser, 
+    checkPassword, 
+    authSession
   } = require('./server-utils');
-const exp = require('constants');
   
 
 app.use(session({
@@ -59,8 +64,8 @@ app.route("/login")
         res.render("login")
     })  
     .post(async (req, res) => {
-        let username = req.body.username
-        let password = req.body.password
+        let username = sanitizeHtml(req.body.username)
+        let password = sanitizeHtml(req.body.password)
 
         let userInUSERS = await userExists(username, "users")
         let userInADMIN = await userExists(username, "admins")
@@ -103,8 +108,6 @@ app.route("/login")
         } 
     })
 
-// ================ LOGOUT ==================
-
 app.get('/logout', authSession, (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -125,7 +128,7 @@ app
         let hashed = await bcrypt.hash(password, saltRounds)
         const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.contact_number, req.body.birthday.valueOf(), req.body.email, req.body.address, 1]
 
-        if(!await userExists(user[0], "users")){
+        if(!await userExists(sanitizeHtml(user[0]), "users")){
             addUser(user)
         } else {
             res.render('register', { message: "Username is already taken."})
