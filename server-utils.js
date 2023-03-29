@@ -135,6 +135,27 @@ async function getReservations(username) {
         console.log('\nERROR IN getReservations\n')
     }
 }
+
+async function addGuestReservation(reservation) {
+    try{
+        await connection.execute(
+            'INSERT INTO guestreservations (username, checkin, checkout, bookingstatus, room, adults, children) VALUES (?, ?, ?, ?, ?, ?, ?)', reservation
+        )
+        console.log('Reservation added.')
+    } catch (error){
+        console.log('\nERROR IN addReservation\n')
+    }
+}
+// returns ALL reservations
+async function getGuestReservations(username) {
+    try{
+        let [rows, fields] = await connection.promise().query('SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, room, adults, children FROM guestreservations ORDER BY id DESC')
+
+        return rows;
+    } catch (error){
+        console.log('\nERROR IN getReservations\n')
+    }
+}
 async function checkPassword(password, username, table){
     let user = await getUser(username, table)
     return await bcrypt.compare(password, user.password)
@@ -262,4 +283,4 @@ async function setCurrentUser(username){
     }
 }
 
-module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, upload };
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, upload };

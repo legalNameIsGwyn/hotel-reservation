@@ -1,0 +1,85 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>Guest</h1>
+    <form id="guest_form" method="POST" action="guest" name="guest_form" autocomplete="on">
+
+        <div class="section-box">
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="checkout"><h3>Check-out</h3></label>
+                    <input class="textbox" type="date" id="checkout" name="checkout">
+                </div>
+                <div class="divider">
+                    <label for="checkin"><h3>Check-in</h3></label>
+                    <input class="textbox" type="date" id="checkin" name="checkin">
+                </div>
+            </div>
+
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="adults">Adults</label>
+                    <input class="textbox" type="number" name="adults" id="adults" value="1">
+                </div>
+                <div class="divider">
+                    <label for="children">Children</label>
+                    <input class="textbox" type="number" name="children" id="children" value="0">
+                </div>
+                <div class="divider">
+                    <label for="room">Room</label>
+                    <input class="textbox" type="number" name="room" id="room" value="0">
+                </div>
+            </div>
+            <div class="input-group divided">
+                <div class="divider">
+                    <label for="guestName">Guest Name:</label>
+                    <input class="textbox" type="text" name="guestName" id="guestName">
+                </div>
+
+                <div class="divider">
+                    <label for="status">Status</label>
+                    <select class="textbox" name="status" id="status">
+                        <option value="checked-in">Checked-in</option>
+                        <option value="checked-out">Checked-out</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="buttons">
+        <input value="Save" class="submit" id="reservation_button" name="reservation_button" type="submit" form="guest_form">
+
+        <form action="dash" method="get">
+            <button type="submit">Back</button>
+        </form>
+    </div>
+
+    <h1>Bookings</h1>
+    <div id="bookings">
+        <% if (bookings.length > 0) { %>
+        <div class="booking-row">
+            <% bookings.forEach(function(booking) { %>
+                
+            <p class="section-box">
+                <strong>Username: </strong> <%= booking.username%><br>
+                <strong>Booking ID:</strong> <%= booking.id %><br>
+                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %><br><strong>Status: </strong><%= booking.bookingstatus %>
+                <br><strong>Room: </strong><%= booking.room %></p>
+            <% }); %>
+            
+        </div>
+        <% } else { %>
+        <p>No bookings found.</p>
+        <% } %>
+    </div>
+    <form action="dash" method="get">
+        <button type="submit">Back</button>
+    </form>
+</body>

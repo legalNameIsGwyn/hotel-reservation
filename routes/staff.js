@@ -3,8 +3,7 @@ const bcrypt = require('bcrypt')
 const router = express.Router()
 const jsonParser = express.json()
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom,getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, upload  
-  } = require('../server-utils');
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, upload } = require('../server-utils');
 
 router.get("/", (req, res) => {
     res.send("you're logged in staff")
@@ -22,8 +21,9 @@ router
 
 router
     .route("/readQR")
-    .get(authSession, (req,res) => {
-        res.render("staff/readQR")
+    .get(authSession,async (req,res) => {
+        let booking = await getGuestReservations()
+        res.render("staff/readQR", {bookings : booking})
     })
     .post(jsonParser, async (req, res) => {
         let username = await decrypt(req.body.text)
@@ -76,6 +76,19 @@ router
             res.render('updateCheckout', {message: "User does not exist"})
         }
         await updateCheckout(username, bookingID, newCheckout)
-        res.render('dash')
+        res.render('staff/dash')
     } )
+
+router
+    .route("/guest")
+    .get(authSession, async(req, res) => {
+        let bookings = await getGuestReservations()
+        res.render("staff/guest", {bookings : bookings})
+    })
+    .post(authSession, async (req, res) => {
+        let reservation = [req.body.guestName, req.body.checkin, req.body.checkout, req.body.status, req.body.room, req.body.adults, req.body.children]
+
+        await addGuestReservation(reservation)
+        res.render('staff/dash')
+    })
 module.exports = router
