@@ -96,7 +96,7 @@ async function getUser(username, table){
     try {
         if(table == "users"){
             let [rows, fields] = await connection.promise().query(
-                'SELECT username, password, first_name, last_name, sex, age, contact_number, DATE_FORMAT(birthday, "%W, %Y-%m-%d") as birthday, address, active, hasID FROM users WHERE username = ?', [username]
+                'SELECT username, password, first_name, last_name, sex, age, contact_number, DATE_FORMAT(birthday, "%W, %Y-%m-%d") as birthday, email, address, active, hasID FROM users WHERE username = ?', [username]
             );
             return rows[0];
         } else if (table == "admins") {

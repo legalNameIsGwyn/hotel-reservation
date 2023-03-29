@@ -4,7 +4,20 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 const path = require('path')
 
-const {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, upload, getUserPayment 
+const { decrypt, 
+    userExists, 
+    getUser, 
+    addReservation, 
+    getReservations, 
+    checkPassword, 
+    authSession, 
+    generateQR, 
+    updateUser, 
+    uploadUserid, 
+    getUserid, 
+    deleteAccount, 
+    upload, 
+    getUserPayment 
   } = require('../server-utils');
 const { render } = require('ejs')
 
@@ -49,6 +62,9 @@ router
 
 router
     .route('/')
+    .get(authSession, (req, res) => {
+        res.render('user/userDash')
+    })
 
 router
     .route('/reservations')
@@ -76,7 +92,7 @@ router
         var username = await decrypt(req.session.username)
         let user = await getUser(username, "users")
         let userHasPay = await userExists(username, "userpayment")
-
+        
         if (user.hasID == 1 ){
             let idName = await getUserid(username)
             let frontid = idName[0].frontid
@@ -161,7 +177,7 @@ router
 
         let userid = [username, frontid, backid, idType]
 
-        uploadUserid(userid, hasID) 
+        await uploadUserid(userid, hasID) 
         user.hasID = 1
         
         res.render('user/profile', {

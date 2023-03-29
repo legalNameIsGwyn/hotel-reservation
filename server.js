@@ -104,8 +104,6 @@ app.route("/login")
         } 
     })
 
-// ================ LOGOUT ==================
-
 app.get('/logout', authSession, (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -126,15 +124,15 @@ app
         let hashed = await bcrypt.hash(password, saltRounds)
 
         const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.contact_number, req.body.birthday.valueOf(), req.body.email, req.body.address, 1, 0]
-        
+        console.log(req.body.email)
 
-        if(!await userExists(user[0], "users")){
-            addUser(user)
-            addUserPayment(req.body.username,req.body.method,req.body.account)
-        } else {
-            res.render('register', { message: "Username is already taken."})
-        }
-        res.redirect('/login')
+        // if(!await userExists(user[0], "users")){
+        //     addUser(user)
+        //     addUserPayment(req.body.username,req.body.method,req.body.account)
+        // } else {
+        //     res.render('register', { message: "Username is already taken."})
+        // }
+        // res.redirect('/login')
     })
 
 app
