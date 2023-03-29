@@ -63,6 +63,17 @@
                 <input class="textbox" id="address" type="text" name="address" value="<%= locals.address %>" >
             </div>
         </div>
+
+        <div class="section-box divided">
+            <div class="divider">
+                <label for="method">Payment Method:</label>
+                <input class="textbox" id="method" type="text" name="method" required>
+            </div>
+            <div class="divider">
+                <label for="account">Account Number:</label>
+                <input class="textbox" id="account" type="number" name="account" required>
+            </div>
+        </div>
         <% if (locals.message) { %>
             <span class="error message"><%= locals.message %> </span>
         <% } %>

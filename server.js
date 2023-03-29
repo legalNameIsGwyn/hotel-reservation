@@ -12,7 +12,7 @@ const userRouter = require('./routes/user')
 const staffRouter = require('./routes/staff')
 const { sessionStore } = require('./sql-connection')
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, upload 
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, addUserPayment, upload 
   } = require('./server-utils');
 const exp = require('constants');
   
@@ -123,10 +123,13 @@ app
     .post(async (req, res) => {
         let password = req.body.password
         let hashed = await bcrypt.hash(password, saltRounds)
+
         const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.contact_number, req.body.birthday.valueOf(), req.body.email, req.body.address, 1, 0]
+        
 
         if(!await userExists(user[0], "users")){
             addUser(user)
+            addUserPayment(req.body.username,req.body.method,req.body.account)
         } else {
             res.render('register', { message: "Username is already taken."})
         }

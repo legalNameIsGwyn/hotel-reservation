@@ -77,7 +77,7 @@ async function addUser(user) {
     try {
         // Insert new user into students
         await connection.promise().query(
-            'INSERT INTO users (username, password, first_name, last_name, sex, age, contact_number, birthday, email, address, active, hasID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [user]
+            'INSERT INTO users (username, password, first_name, last_name, sex, age, contact_number, birthday, email, address, active, hasID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', user
         );
         
         } catch (error) {
@@ -288,7 +288,13 @@ async function setCurrentUser(username){
 }
 
 async function addUserPayment(username, method, number){
-
+    try{
+        await connection.promise().query(
+            "INSERT INTO userpayment (username, method, number) VALUES (?,?,?)", [username, method, number]
+        )
+    } catch(e) {
+        console.log("\nERROR in addUserPayment")
+    }
 }
 
-module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, upload };
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, addUserPayment, upload };
