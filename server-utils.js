@@ -288,21 +288,7 @@ async function setCurrentUser(username){
 }
 
 async function addUserPayment(username, method, number){
-    try {
-        await connection.promise().query("INSERT INTO userpayment (username, method, number) VALUES (?,?,?)",[username, method, number])
-    } catch(e) {
-        console.log("ERROR in addUserPayment\n", e)
-    }
+
 }
 
-async function getUserPayment(username){
-    try{
-        const [rows] = await connection.promise().query("SELECT * FROM userpayment WHERE username = ?", [username])
-        console.log(rows)
-        return rows
-    }catch(e) {
-        console.log("ERROR in getUserPayment\n", e)
-    }
-}
-
-module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, addUserPayment, getUserPayment, upload };
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, upload };
