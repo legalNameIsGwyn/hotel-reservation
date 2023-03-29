@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const router = express.Router()
 const jsonParser = express.json()
 
-const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, upload } = require('../server-utils');
+const { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, upload } = require('../server-utils');
 
 router.get("/", (req, res) => {
     res.send("you're logged in staff")
@@ -15,7 +15,7 @@ router
         res.render('staff/staffDash')
     })
     .post(authSession, (req, res) => {
-        
+        res.send("why are you here?")
     })
 
 
@@ -90,5 +90,13 @@ router
 
         await addGuestReservation(reservation)
         res.render('staff/dash')
+    })
+
+router
+    .route("/reservations")
+    .get(authSession, async (req, res) => {
+        let bookings = await getAllUnfinishedBookings()
+
+        res.render('staff/reservations', {bookings: bookings})
     })
 module.exports = router

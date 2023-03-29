@@ -32,7 +32,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-
 function encrypt(text) {
     const iv = crypto.randomBytes(16);
 
@@ -108,7 +107,6 @@ async function getUser(username, table){
     }
 }
 
-// RESERVATION
 async function addReservation(reservation) {
     try{
         await connection.execute(
@@ -119,17 +117,13 @@ async function addReservation(reservation) {
         console.log('\nERROR IN addReservation\n')
     }
 }
-// returns ALL reservations
+
 async function getReservations(username) {
     try{
         let [rows, fields] = await connection.promise().query(
             'SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, room, adults, children FROM reservations WHERE username = ? ORDER BY id DESC', [username]
         )
-                rows = rows.map(row => {
-            row.check_in = new Date(row.check_in).toLocaleDateString();
-            row.check_out = new Date(row.check_out).toLocaleDateString();
-            return row;
-        });
+
         return rows;
     } catch (error){
         console.log('\nERROR IN getReservations\n')
@@ -146,7 +140,7 @@ async function addGuestReservation(reservation) {
         console.log('\nERROR IN addReservation\n')
     }
 }
-// returns ALL reservations
+
 async function getGuestReservations(username) {
     try{
         let [rows, fields] = await connection.promise().query('SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, room, adults, children FROM guestreservations ORDER BY id DESC')
@@ -156,6 +150,7 @@ async function getGuestReservations(username) {
         console.log('\nERROR IN getReservations\n')
     }
 }
+
 async function checkPassword(password, username, table){
     let user = await getUser(username, table)
     return await bcrypt.compare(password, user.password)
@@ -259,6 +254,16 @@ async function getUnfinishedBookings(username){
     }
 }
 
+async function getAllUnfinishedBookings(){
+    try{
+        let [rows, fields] = await connection.promise().query('SELECT id, username, DATE_FORMAT(checkin, "%W, %Y-%m-%d") as checkin, DATE_FORMAT(checkout, "%W, %Y-%m-%d") as checkout, bookingstatus, room, adults, children FROM reservations WHERE checkin >= CURDATE() ORDER BY id DESC')
+
+        return rows;
+    } catch(e){
+        console.log("error in getUnfinishedBookings")
+    }
+}
+
 async function currentUser(){
     const [rows] = await connection.promise().query('SELECT * FROM currentuser LIMIT 1');
     if (rows.length === 0) {
@@ -283,4 +288,8 @@ async function setCurrentUser(username){
     }
 }
 
-module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, upload };
+async function addUserPayment(username, method, number){
+
+}
+
+module.exports = { encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount, updateBookingStatus, updateRoom, getUnfinishedBookings, setCurrentUser, currentUser, getCurrentBookingID, updateCheckout, addGuestReservation, getGuestReservations, getAllUnfinishedBookings, upload };

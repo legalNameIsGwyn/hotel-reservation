@@ -1,8 +1,32 @@
 <h1>Reservations</h1>
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest</title>
+    <link rel="stylesheet" href="/styles/style.css">
 </head>
 
-<form action="/dashboard" method="get">
-    <button type="submit">Back</button>
-</form>
+<body>
+    <h1>Bookings</h1>
+    <div id="bookings">
+        <% if (bookings.length > 0) { %>
+        <div class="booking-row">
+            <% bookings.forEach(function(booking) { %>
+                
+            <p class="section-box">
+                <strong>Username: </strong> <%= booking.username%><br>
+                <strong>Booking ID:</strong> <%= booking.id %><br>
+                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %><br><strong>Status: </strong><%= booking.bookingstatus %>
+                <br><strong>Room: </strong><%= booking.room %></p>
+            <% }); %>
+            
+        </div>
+        <% } else { %>
+        <p>No bookings found.</p>
+        <% } %>
+    </div>
+    <form action="dash" method="get">
+        <button type="submit">Back</button>
+    </form>
+</body>
