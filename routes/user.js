@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const saltRounds = 10
 const path = require('path')
 
-const {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, upload 
+const {encrypt, decrypt, userExists, addUser, getUser, addReservation, getReservations, checkPassword, authSession, generateQR, updateUser, uploadUserid, getUserid, deleteAccount,updateBookingStatus, getUnfinishedBookings, upload, getUserPayment 
   } = require('../server-utils');
 const { render } = require('ejs')
 
@@ -77,13 +77,16 @@ router
         let user = await getUser(username, "users")
 
         if (user.hasID == 1){
+            let username = await decrypt(req.session.username)
             let idName = await getUserid(username)
             let frontid = idName[0].frontid
             let backid = idName[0].backid
 
             let frontFilePath = `/uploads/${frontid}`;
-            let backFilePath = `/uploads/${backid}`;
-            res.render('user/profile', {user: user, frontFilePath : frontFilePath, backFilePath : backFilePath})
+            let backFfilePath = `/uploads/${backid}`;
+
+            let userpay = await getUserPayment(username)
+            res.render('user/profile', {user: user, frontFilePath : frontFilePath, backFilePath : backFilePath, userpay: userpay})
         } else {
             res.render('user/profile', {user : user})
         }

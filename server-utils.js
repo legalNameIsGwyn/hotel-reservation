@@ -63,7 +63,7 @@ async function userExists(username, table) {
                 'SELECT * FROM admins WHERE username = ?', [username]
             )
             return rows.length > 0
-        }
+        } 
 
     } catch (error) {
         console.error(error);
@@ -76,9 +76,8 @@ async function userExists(username, table) {
 async function addUser(user) {
     try {
         // Insert new user into students
-        await connection.execute(
-            'INSERT INTO users (username, password, first_name, last_name, sex, age, contact_number, birthday, email, address, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            user
+        await connection.promise().query(
+            'INSERT INTO users (username, password, first_name, last_name, sex, age, contact_number, birthday, email, address, active, hasID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [user]
         );
         
         } catch (error) {

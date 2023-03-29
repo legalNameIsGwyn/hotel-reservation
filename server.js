@@ -18,7 +18,8 @@ const {
     addUser, 
     getUser, 
     checkPassword, 
-    authSession
+    authSession,
+    addUserPayment
   } = require('./server-utils');
   
 
@@ -126,10 +127,13 @@ app
     .post(async (req, res) => {
         let password = req.body.password
         let hashed = await bcrypt.hash(password, saltRounds)
-        const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.contact_number, req.body.birthday.valueOf(), req.body.email, req.body.address, 1]
+        const user = [req.body.username, hashed, req.body.first_name, req.body.last_name, req.body.sex, req.body.age, req.body.contact_number, req.body.birthday.valueOf(), req.body.email, req.body.address, 1, 0]
 
         if(!await userExists(sanitizeHtml(user[0]), "users")){
-            addUser(user)
+            await addUser(user)
+            console.log(`Added user: ${req.body.username}`)
+            await addUserPayment(sanitizeHtml(req.body.username), sanitizeHtml(req.body.payMethod), sanitizeHtml(req.body.payNumber))
+            console.log(`Added payment method: ${sanitizeHtml(req.body.payMethod)}`)
         } else {
             res.render('register', { message: "Username is already taken."})
         }
