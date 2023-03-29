@@ -4,10 +4,10 @@ let serverAddress = "https://192.168.1.7:3000/staff/checkout"
 function onScanSuccess(decodedText, decodedResult) {
     html5QrcodeScanner.clear();
     fetch(serverAddress, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      mode: 'cors',
-      body: JSON.stringify({text: decodedText})
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        mode: 'cors',
+        body: JSON.stringify({text: decodedText})
     }).then((response) => {
       response.json().then((data) => {
         if (data.message) {

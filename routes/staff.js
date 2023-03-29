@@ -27,7 +27,6 @@ router
     })
     .post(jsonParser, async (req, res) => {
         let username = await decrypt(req.body.text)
-        console.log(`The user is: ${username}`)
         await setCurrentUser(username)
         res.redirect(`userdata`)
     })

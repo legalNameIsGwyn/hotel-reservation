@@ -73,17 +73,22 @@
     <h1>Bookings</h1>
     <div id="bookings">
         <% if (bookings.length > 0) { %>
-        <div class="section-box booking-row">
-            <% bookings.forEach(function(booking) { %>
-            <p><strong>Booking ID:</strong> <%= booking.id %><br>
-                <strong>Check-in:</strong>  <%= booking.checkin %><br> <strong>Check-out: </strong><%= booking.checkout %><br><strong>Status: </strong><%= booking.bookingstatus %>
-                <br><strong>Room: </strong><%= booking.room %></p>
-            <% }); %>
-            
-        </div>
-        <% } else { %>
-        <p>No bookings found.</p>
-        <% } %>
+            <div class="booking-row">
+                <% bookings.forEach(function(booking) { %>
+                <p class="section-box">
+                    <strong>Booking ID:</strong> <%= booking.id %><br>
+                    <strong>Check-in:</strong>  <%= booking.checkin %><br> 
+                    <strong>Check-out: </strong><%= booking.checkout %><br>
+                    <strong>Status: </strong><%= booking.bookingstatus %><br>
+                    <strong>Room: </strong><%= booking.room %><br>
+                    <strong>Adults: </strong><%= booking.adults %><br>
+                    <strong>Children: </strong><%= booking.children %></p><br>
+                <% }); %>
+                
+            </div>
+            <% } else { %>
+            <p>No bookings found.</p>
+            <% } %>
     </div>
 </body>
 </html>
